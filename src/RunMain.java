@@ -29,7 +29,7 @@ public class RunMain {
         System.out.println(g.toJson(pfresult));
 
         Class1 c = new Class1();
-        c.dataInput(4, 100, 0.95, 1.05, 30, databasic, pfwork, pfresult);
+        c.dataInput(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
         
 //        MWNumericArray para1 = MWNumericArray.newInstance(new int[] {1}, new int[] {1}, MWClassID.INT32);
 //        MWCellArray para2 = new MWCellArray(new int[] {2, 2});
