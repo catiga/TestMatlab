@@ -21,9 +21,9 @@ public class DataBasicTtrans {
      }
      
      public DataBasicTtrans() {
-         onename = new String[] {"¶õºìÊ¯ÆÂ220"};
-         twoname = new String[] {"¶õºìÊ¯ÆÂ110"};
-         thrname = new String[] {"¶õºìÊ¯ÆÂ11-1"};
+         onename = new String[] {"é„‚çº¢çŸ³å¡220"};
+         twoname = new String[] {"é„‚çº¢çŸ³å¡110"};
+         thrname = new String[] {"é„‚çº¢çŸ³å¡11-1"};
          
          v1 = new double[] {230.0};
          v2 = new double[] {121.0};

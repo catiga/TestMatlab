@@ -19,8 +19,8 @@ public class DataPfresultGen {
      }
      
      public DataPfresultGen() {
-         name = new String[] {"¶õ»ÆÊ¯210"};
-         busname = new String[] {"¶õ»ÆÊ¯210"};
+         name = new String[] {"é„‚é»„çŸ³210"};
+         busname = new String[] {"é„‚é»„çŸ³210"};
          type = new String[] {"PV-PQ"};
          p = new double[] {3.0};
          q = new double[] {1.0};

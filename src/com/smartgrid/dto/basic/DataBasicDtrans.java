@@ -17,8 +17,8 @@ public class DataBasicDtrans {
     }
 
     public DataBasicDtrans() {
-        lname = new String[] {"¶õ»ÆÊ¯210"};
-        jname = new String[] {"¶õ»ÆÐÂ³§220"};
+        lname = new String[] {"é„‚é»„çŸ³210"};
+        jname = new String[] {"é„‚é»„æ–°åŽ‚220"};
         vi = new double[] {19.0};
         vj = new double[] {230.0};
     }

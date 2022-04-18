@@ -15,7 +15,7 @@ public class DataPfworkLoad {
      }
      
      public DataPfworkLoad() {
-         name = new String[] {"∂ı∫Ï Ø∆¬110"};
+         name = new String[] {"ÈÑÇÁ∫¢Áü≥Âù°110"};
          pl = new double[] {1.0};
          ql = new double[] {1.0};
      }
