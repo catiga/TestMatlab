@@ -18,7 +18,7 @@ public class DataBasicBranch {
      
      int[] uplimit;
      
-     int[] type;
+     String[] type;
      
      int[] id;
      
@@ -27,21 +27,21 @@ public class DataBasicBranch {
      }
      
      public DataBasicBranch() {
-         lname = new String[] {"TEST LNAME"};
-         jname = new String[] {"TEST JNAME"};
-         rvalue = new double[] {1.0};
+         lname = new String[] {"∂ı∫Ï Ø∆¬220","∂ı∫Ï Ø∆¬220","∂ı–¢∏–220","∂ı–¢∏–220","∂ı“¶º“≥Â220","∂ı“¶º“≥Â220","∂ı“¶º“≥Â220"};
+         jname = new String[] {"∂ı‘∆√Œ220","∂ı‘∆√Œ220","∂ı–¢∏–1B220","∂ı∫Ï Ø∆¬220","∂ı–¢∏–220","∂ı–¢∏–220","∂ı∫Ï Ø∆¬220"};
+         rvalue = new double[] {1.0,1.0,1.0,1.0,1.0,1.0,1.0};
          
-         xvalue = new double[] {1.0};
+         xvalue = new double[] {1.0,1.0,1.0,1.0,1.0,1.0,1.0};
          
-         bvalue = new double[] {1.0};
+         bvalue = new double[] {1.0,1.0,1.0,1.0,1.0,1.0,1.0};
          
-         rateka = new int[] {1};
+         rateka = new int[] {1,1,1,1,1,1,1};
          
-         uplimit = new int[] {1};
+         uplimit = new int[] {1,1,1,1,1,1,1};
          
-         type = new int[] {1};
+         type = new String[] {"0","0","0","0","0","0","0"};
          
-         id = new int[] {1};
+         id = new int[] {1,2,3,4,5,6,7};
      }
 
     public String[] getLname() {
@@ -100,11 +100,11 @@ public class DataBasicBranch {
         this.uplimit = uplimit;
     }
 
-    public int[] getType() {
+    public String[] getType() {
         return type;
     }
 
-    public void setType(int[] type) {
+    public void setType(String[] type) {
         this.type = type;
     }
 

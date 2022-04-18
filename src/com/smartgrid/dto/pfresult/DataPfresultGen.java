@@ -8,7 +8,7 @@ public class DataPfresultGen {
      
      String[] busname;
      
-     int[] type;
+     String[] type;
      
      double[] p;
      
@@ -19,10 +19,10 @@ public class DataPfresultGen {
      }
      
      public DataPfresultGen() {
-         name = new String[] {"TEST NAME"};
-         busname = new String[] {"TEST BUSNAME"};
-         type = new int[] {1};
-         p = new double[] {1.0};
+         name = new String[] {"¶õ»ÆÊ¯210"};
+         busname = new String[] {"¶õ»ÆÊ¯210"};
+         type = new String[] {"PV-PQ"};
+         p = new double[] {3.0};
          q = new double[] {1.0};
      }
 
@@ -42,11 +42,11 @@ public class DataPfresultGen {
         this.busname = busname;
     }
 
-    public int[] getType() {
+    public String[] getType() {
         return type;
     }
 
-    public void setType(int[] type) {
+    public void setType(String[] type) {
         this.type = type;
     }
 

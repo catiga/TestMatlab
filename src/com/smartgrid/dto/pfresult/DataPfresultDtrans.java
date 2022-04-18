@@ -17,8 +17,8 @@ public class DataPfresultDtrans {
      }
      
      public DataPfresultDtrans() {
-         transname = new String[] {"TEST TRANSNAME"};
-         jname = new String[] {"TEST JNAME"};
+         transname = new String[] {"鄂黄新厂#9主变"};
+         jname = new String[] {"鄂黄新厂220"};
          jp = new double[] {1.0};
          jq = new double[] {1.0};
      }

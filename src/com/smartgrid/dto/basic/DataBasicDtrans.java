@@ -17,10 +17,10 @@ public class DataBasicDtrans {
     }
 
     public DataBasicDtrans() {
-        lname = new String[] {"TEST LNAME"};
-        jname = new String[] {"TEST JNAME"};
-        vi = new double[] {1.0};
-        vj = new double[] {1.0};
+        lname = new String[] {"¶õ»ÆÊ¯210"};
+        jname = new String[] {"¶õ»ÆÐÂ³§220"};
+        vi = new double[] {19.0};
+        vj = new double[] {230.0};
     }
 
     public String[] getLname() {

@@ -11,7 +11,7 @@ public class DataBasicGen {
     }
 
     public DataBasicGen() {
-        genname = new String[] {"TEST GENNAME"};
+        genname = new String[] {"¶õ»ÆÊ¯210"};
     }
 
     public String[] getGenname() {

@@ -19,11 +19,11 @@ public class DataPfworkBranch {
      }
      
      public DataPfworkBranch() {
-         lname = new String[] {"TEST LNAME"};
-         jname = new String[] {"TEST JANEM"};
-         valid = new int[] {1};
-         ntype = new int[] {1};
-         id = new int[] {1};
+         lname = new String[] {"∂ı∫Ï Ø∆¬220","∂ı∫Ï Ø∆¬220","∂ı–¢∏–220","∂ı–¢∏–220","∂ı“¶º“≥Â220","∂ı“¶º“≥Â220","∂ı“¶º“≥Â220"};
+         jname = new String[] {"∂ı‘∆√Œ220","∂ı‘∆√Œ220","∂ı–¢∏–1B220","∂ı∫Ï Ø∆¬220","∂ı–¢∏–220","∂ı–¢∏–220","∂ı∫Ï Ø∆¬220"};
+         valid = new int[] {1,1,1,1,1,1,1};
+         ntype = new int[] {1,1,1,1,1,1,1};
+         id = new int[] {1,2,3,4,5,6,7};
      }
 
     public String[] getLname() {

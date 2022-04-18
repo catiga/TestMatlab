@@ -29,10 +29,10 @@ public class DataPfresultTtrans {
      }
      
      public DataPfresultTtrans() {
-         transname = new String[] {"TEST TRANSNAME"};
-         onename = new String[] {"TEST ONENAME"};
-         twoname = new String[] {"TEST TWONAME"};
-         thrname = new String[] {"TEST THRNAME"};
+         transname = new String[] {"¶õºìÊ¯ÆÂÕ¾Ö÷±ä"};
+         onename = new String[] {"¶õºìÊ¯ÆÂ220"};
+         twoname = new String[] {"¶õºìÊ¯ÆÂ110"};
+         thrname = new String[] {"¶õºìÊ¯ÆÂ11-1"};
          onep = new double[] {1.0};
          oneq = new double[] {1.0};
          twop = new double[] {1.0};

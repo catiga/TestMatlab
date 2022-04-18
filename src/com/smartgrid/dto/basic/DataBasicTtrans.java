@@ -21,13 +21,13 @@ public class DataBasicTtrans {
      }
      
      public DataBasicTtrans() {
-         onename = new String[] {"TEST ONENAME"};
-         twoname = new String[] {"TEST TWONAME"};
-         thrname = new String[] {"TEST THRNAME"};
+         onename = new String[] {"¶õºìÊ¯ÆÂ220"};
+         twoname = new String[] {"¶õºìÊ¯ÆÂ110"};
+         thrname = new String[] {"¶õºìÊ¯ÆÂ11-1"};
          
-         v1 = new double[] {1.0};
-         v2 = new double[] {1.2};
-         v3 = new double[] {1.3};
+         v1 = new double[] {230.0};
+         v2 = new double[] {121.0};
+         v3 = new double[] {10.5};
      }
 
     public String[] getOnename() {

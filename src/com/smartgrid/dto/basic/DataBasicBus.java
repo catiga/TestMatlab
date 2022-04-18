@@ -6,7 +6,7 @@ public class DataBasicBus {
 
     String[] busname;
 
-    int[] busbase;
+    double[] busbase;
 
     String[] stationname;
     
@@ -15,9 +15,9 @@ public class DataBasicBus {
     }
 
     public DataBasicBus() {
-        busname = new String[] {"TEST BUSNAME"};
-        busbase = new int[] {1};
-        stationname = new String[] {"TEST STATIONNAME"};
+        busname = new String[] {"¶õÔÆÃÎ220","¶õºìÊ¯ÆÂ220","¶õÐ¢¸Ð220","¶õÐ¢¸Ð1B220","¶õÒ¦¼Ò³å220","¶õ»ÆÊ¯210","¶õ»ÆÐÂ³§220","¶õºìÊ¯ÆÂ110","¶õºìÊ¯ÆÂ11-1"};
+        busbase = new double[] {230.0};
+        stationname = new String[] {"¶õÔÆÃÎ220","¶õºìÊ¯ÆÂ220","¶õÐ¢¸Ð220","¶õÐ¢¸Ð1B220","¶õÒ¦¼Ò³å220","¶õ»ÆÊ¯210","¶õ»ÆÐÂ³§220","¶õºìÊ¯ÆÂ110","¶õºìÊ¯ÆÂ11-1"};
     }
 
     public String[] getBusname() {
@@ -28,11 +28,11 @@ public class DataBasicBus {
         this.busname = busname;
     }
 
-    public int[] getBusbase() {
+    public double[] getBusbase() {
         return busbase;
     }
 
-    public void setBusbase(int[] busbase) {
+    public void setBusbase(double[] busbase) {
         this.busbase = busbase;
     }
 

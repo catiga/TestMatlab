@@ -15,7 +15,7 @@ public class DataPfworkLoad {
      }
      
      public DataPfworkLoad() {
-         name = new String[] {"TEST NAME"};
+         name = new String[] {"¶õºìÊ¯ÆÂ110"};
          pl = new double[] {1.0};
          ql = new double[] {1.0};
      }
