@@ -1,10 +1,11 @@
  package com.smartgrid.dto.pfwork;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class DataPfworkLoad {
 
-     String[] name;
+     MWCellArray name;
      
      double[] pl;
      
@@ -15,16 +16,27 @@ public class DataPfworkLoad {
      }
      
      public DataPfworkLoad() {
-         name = new String[] {"鄂红石坡110"};
+    	 
+    	 String[] tmp_name = new String[]{"鄂红石坡110"};
+    	 
+         name = new MWCellArray(new int[]{tmp_name.length,1});
+         int i = 1;
+         for(String s : tmp_name) {
+        	 int[] idx = new int[] {i++, 1};
+        	 name.set(idx, s);
+         }
+        
+    	 
+    	 //name = new String[] {"鄂红石坡110"};
          pl = new double[] {1.0};
          ql = new double[] {1.0};
      }
 
-    public String[] getName() {
+    public MWCellArray getName() {
         return name;
     }
 
-    public void setName(String[] name) {
+    public void setName(MWCellArray name) {
         this.name = name;
     }
 

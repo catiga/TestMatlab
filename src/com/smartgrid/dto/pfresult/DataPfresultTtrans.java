@@ -1,16 +1,17 @@
  package com.smartgrid.dto.pfresult;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class DataPfresultTtrans {
 
-     String[] transname;
+     MWCellArray transname;
      
-     String[] onename;
+     MWCellArray onename;
      
-     String[] twoname;
+     MWCellArray twoname;
      
-     String[] thrname;
+     MWCellArray thrname;
      
      double[] onep;
      
@@ -29,10 +30,45 @@ public class DataPfresultTtrans {
      }
      
      public DataPfresultTtrans() {
-         transname = new String[] {"鄂红石坡站主变"};
-         onename = new String[] {"鄂红石坡220"};
-         twoname = new String[] {"鄂红石坡110"};
-         thrname = new String[] {"鄂红石坡11-1"};
+    	 String[] tmp_transname = new String[]{"鄂红石坡站主变"};
+    	 String[] tmp_onename = new String[]{"鄂红石坡220"};
+         String[] tmp_twoname = new String[]{"鄂红石坡110"};
+         String[] tmp_thrname = new String[]{"鄂红石坡11-1"};
+         transname = new MWCellArray(new int[]{tmp_transname.length,1});
+         int i = 1;
+         for(String s : tmp_transname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 transname.set(idx, s);
+         }
+         
+         onename = new MWCellArray(new int[]{tmp_onename.length,1});
+         i = 1;
+         for(String s : tmp_onename) {
+        	 int[] idx = new int[] {i++, 1};
+        	 onename.set(idx, s);
+         }
+         
+         twoname = new MWCellArray(new int[]{tmp_twoname.length,1});
+         i = 1;
+         for(String s : tmp_twoname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 twoname.set(idx, s);
+         }
+    	 
+         thrname = new MWCellArray(new int[]{tmp_thrname.length,1});
+         i = 1;
+         for(String s : tmp_thrname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 thrname.set(idx, s);
+         }
+    	 
+    	 
+    	 
+    	 
+    	 //transname = new String[] {"鄂红石坡站主变"};
+         //onename = new String[] {"鄂红石坡220"};
+         //twoname = new String[] {"鄂红石坡110"};
+         //thrname = new String[] {"鄂红石坡11-1"};
          onep = new double[] {1.0};
          oneq = new double[] {1.0};
          twop = new double[] {1.0};
@@ -41,35 +77,35 @@ public class DataPfresultTtrans {
          thrq = new double[] {1.0};
      }
 
-    public String[] getTransname() {
+    public MWCellArray getTransname() {
         return transname;
     }
 
-    public void setTransname(String[] transname) {
+    public void setTransname(MWCellArray transname) {
         this.transname = transname;
     }
 
-    public String[] getOnename() {
+    public MWCellArray getOnename() {
         return onename;
     }
 
-    public void setOnename(String[] onename) {
+    public void setOnename(MWCellArray onename) {
         this.onename = onename;
     }
 
-    public String[] getTwoname() {
+    public MWCellArray getTwoname() {
         return twoname;
     }
 
-    public void setTwoname(String[] twoname) {
+    public void setTwoname(MWCellArray twoname) {
         this.twoname = twoname;
     }
 
-    public String[] getThrname() {
+    public MWCellArray getThrname() {
         return thrname;
     }
 
-    public void setThrname(String[] thrname) {
+    public void setThrname(MWCellArray thrname) {
         this.thrname = thrname;
     }
 

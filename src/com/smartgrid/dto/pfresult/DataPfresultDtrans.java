@@ -1,12 +1,13 @@
  package com.smartgrid.dto.pfresult;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class DataPfresultDtrans {
 
-     String[] transname;
+     MWCellArray transname;
      
-     String[] jname;
+     MWCellArray jname;
      
      double[] jp;
      
@@ -17,25 +18,44 @@ public class DataPfresultDtrans {
      }
      
      public DataPfresultDtrans() {
-         transname = new String[] {"鄂黄新厂#9主变"};
-         jname = new String[] {"鄂黄新厂220"};
+    	 String[] tmp_transname = new String[]{"鄂黄新厂#9主变"};
+         String[] tmp_Jname = new String[]{"鄂黄新厂220"};
+    	 
+         
+         transname = new MWCellArray(new int[]{tmp_transname.length,1});
+         int i = 1;
+         for(String s : tmp_transname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 transname.set(idx, s);
+         }
+         
+         jname = new MWCellArray(new int[]{tmp_Jname.length,1});
+         i = 1;
+         for(String s : tmp_Jname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 jname.set(idx, s);
+         }
+    	 
+    	 
+    	 
+
          jp = new double[] {1.0};
          jq = new double[] {1.0};
      }
 
-    public String[] getTransname() {
+    public MWCellArray getTransname() {
         return transname;
     }
 
-    public void setTransname(String[] transname) {
+    public void setTransname(MWCellArray transname) {
         this.transname = transname;
     }
 
-    public String[] getJname() {
+    public MWCellArray getJname() {
         return jname;
     }
 
-    public void setJname(String[] jname) {
+    public void setJname(MWCellArray jname) {
         this.jname = jname;
     }
 

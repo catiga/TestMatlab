@@ -1,14 +1,15 @@
  package com.smartgrid.dto.pfresult;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class DataPfresultGen {
 
-     String[] name;
+     MWCellArray name;
      
-     String[] busname;
+     MWCellArray busname;
      
-     String[] type;
+     MWCellArray type;
      
      double[] p;
      
@@ -19,34 +20,59 @@ public class DataPfresultGen {
      }
      
      public DataPfresultGen() {
-         name = new String[] {"鄂黄石210"};
-         busname = new String[] {"鄂黄石210"};
-         type = new String[] {"PV-PQ"};
+    	 String[] tmp_name = new String[]{"鄂黄石210"};
+         String[] tmp_busname = new String[]{"鄂黄石210"};
+         String[] tmp_type = new String[]{"PV-PQ"};
+         
+         name = new MWCellArray(new int[]{tmp_name.length,1});
+         int i = 1;
+         for(String s : tmp_name) {
+        	 int[] idx = new int[] {i++, 1};
+        	 name.set(idx, s);
+         }
+         
+         busname = new MWCellArray(new int[]{tmp_busname.length,1});
+         i = 1;
+         for(String s : tmp_busname) {
+        	 int[] idx = new int[] {i++, 1};
+        	 busname.set(idx, s);
+         }
+         type = new MWCellArray(new int[]{tmp_type.length,1});
+         i = 1;
+         for(String s : tmp_type) {
+        	 int[] idx = new int[] {i++, 1};
+        	 type.set(idx, s);
+         }
+    	 
+    	 
+    	 //name = new String[] {"鄂黄石210"};
+         //busname = new String[] {"鄂黄石210"};
+         //type = new String[] {"PV-PQ"};
          p = new double[] {3.0};
          q = new double[] {1.0};
      }
 
-    public String[] getName() {
+    public MWCellArray getName() {
         return name;
     }
 
-    public void setName(String[] name) {
+    public void setName(MWCellArray name) {
         this.name = name;
     }
 
-    public String[] getBusname() {
+    public MWCellArray getBusname() {
         return busname;
     }
 
-    public void setBusname(String[] busname) {
+    public void setBusname(MWCellArray busname) {
         this.busname = busname;
     }
 
-    public String[] getType() {
+    public MWCellArray getType() {
         return type;
     }
 
-    public void setType(String[] type) {
+    public void setType(MWCellArray type) {
         this.type = type;
     }
 
