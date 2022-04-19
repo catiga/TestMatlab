@@ -20,11 +20,11 @@ public class DataBasicBus {
         busbase = new double[] {230.0};
         stationname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石210","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};
         
-        MWCellArray cell = new MWCellArray(new int[]{tmp_busname.length, 1});
+        busname = new MWCellArray(new int[]{tmp_busname.length, 1});
         int i = 1;
         for(String s : tmp_busname) {
             int[] idx = new int[] {i++, 1};
-            cell.set(idx, s);
+            busname.set(idx, s);
         }
     }
 
