@@ -7,11 +7,11 @@ public class DataPfresultDtrans {
 
      MWCellArray transname;
      
-     MWCellArray jname;
+     MWCellArray Jname;
      
-     double[] jp;
+     double[] JP;
      
-     double[] jq;
+     double[] JQ;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -29,18 +29,18 @@ public class DataPfresultDtrans {
         	 transname.set(idx, s);
          }
          
-         jname = new MWCellArray(new int[]{tmp_Jname.length,1});
+         Jname = new MWCellArray(new int[]{tmp_Jname.length,1});
          i = 1;
          for(String s : tmp_Jname) {
         	 int[] idx = new int[] {i++, 1};
-        	 jname.set(idx, s);
+        	 Jname.set(idx, s);
          }
     	 
     	 
     	 
 
-         jp = new double[] {1.0};
-         jq = new double[] {1.0};
+         JP = new double[] {1.0};
+         JQ = new double[] {1.0};
      }
 
     public MWCellArray getTransname() {
@@ -52,27 +52,27 @@ public class DataPfresultDtrans {
     }
 
     public MWCellArray getJname() {
-        return jname;
+        return Jname;
     }
 
-    public void setJname(MWCellArray jname) {
-        this.jname = jname;
+    public void setJname(MWCellArray Jname) {
+        this.Jname = Jname;
     }
 
     public double[] getJp() {
-        return jp;
+        return JP;
     }
 
-    public void setJp(double[] jp) {
-        this.jp = jp;
+    public void setJp(double[] JP) {
+        this.JP = JP;
     }
 
     public double[] getJq() {
-        return jq;
+        return JQ;
     }
 
-    public void setJq(double[] jq) {
-        this.jq = jq;
+    public void setJq(double[] JQ) {
+        this.JQ = JQ;
     }
      
 }

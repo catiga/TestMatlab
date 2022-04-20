@@ -6,17 +6,17 @@ public class DataPfworkGen {
 
      int[] valid;
      
-     double[] v0;
+     double[] V0;
      
      int[] angle;
      
-     double[] qmax;
+     double[] Qmax;
      
-     double[] qmin;
+     double[] Qmin;
      
-     double[] pmax;
+     double[] Pmax;
      
-     double[] pmin;
+     double[] Pmin;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -24,12 +24,12 @@ public class DataPfworkGen {
      
      public DataPfworkGen() {
          valid = new int[] {1};
-         v0 = new double[] {1.0};
+         V0 = new double[] {1.0};
          angle = new int[] {1};
-         qmax = new double[] {1.0};
-         qmin = new double[] {1.0};
-         pmax = new double[] {1.0};
-         pmin = new double[] {1.0};
+         Qmax = new double[] {1.0};
+         Qmin = new double[] {1.0};
+         Pmax = new double[] {1.0};
+         Pmin = new double[] {1.0};
      }
 
     public int[] getValid() {
@@ -41,11 +41,11 @@ public class DataPfworkGen {
     }
 
     public double[] getV0() {
-        return v0;
+        return V0;
     }
 
-    public void setV0(double[] v0) {
-        this.v0 = v0;
+    public void setV0(double[] V0) {
+        this.V0 = V0;
     }
 
     public int[] getAngle() {
@@ -57,35 +57,35 @@ public class DataPfworkGen {
     }
 
     public double[] getQmax() {
-        return qmax;
+        return Qmax;
     }
 
-    public void setQmax(double[] qmax) {
-        this.qmax = qmax;
+    public void setQmax(double[] Qmax) {
+        this.Qmax = Qmax;
     }
 
     public double[] getQmin() {
-        return qmin;
+        return Qmin;
     }
 
-    public void setQmin(double[] qmin) {
-        this.qmin = qmin;
+    public void setQmin(double[] Qmin) {
+        this.Qmin = Qmin;
     }
 
     public double[] getPmax() {
-        return pmax;
+        return Pmax;
     }
 
-    public void setPmax(double[] pmax) {
-        this.pmax = pmax;
+    public void setPmax(double[] Pmax) {
+        this.Pmax = Pmax;
     }
 
     public double[] getPmin() {
-        return pmin;
+        return Pmin;
     }
 
-    public void setPmin(double[] pmin) {
-        this.pmin = pmin;
+    public void setPmin(double[] Pmin) {
+        this.Pmin = Pmin;
     }
      
 }

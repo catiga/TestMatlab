@@ -5,13 +5,13 @@ import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class DataBasicDtrans {
 
-    MWCellArray lname;
+    MWCellArray Iname;
 
-    MWCellArray jname;
+    MWCellArray Jname;
 
-    double[] vi;
+    double[] Vi;
 
-    double[] vj;
+    double[] Vj;
     
     public MWStructArray toM() throws Exception {
         return MWStructArray.fromBean(this);
@@ -21,18 +21,18 @@ public class DataBasicDtrans {
     	String[] tmp_Iname = new String[]{"鄂黄石210"};
         String[] tmp_Jname = new String[]{"鄂黄新厂220"};
    	 
-        lname = new MWCellArray(new int[]{tmp_Iname.length,1});
+        Iname = new MWCellArray(new int[]{tmp_Iname.length,1});
         int i = 1;
         for(String s : tmp_Iname) {
        	 int[] idx = new int[] {i++, 1};
-       	 lname.set(idx, s);
+       	 Iname.set(idx, s);
         }
         
-        jname = new MWCellArray(new int[]{tmp_Jname.length,1});
+        Jname = new MWCellArray(new int[]{tmp_Jname.length,1});
         i = 1;
         for(String s : tmp_Jname) {
        	 int[] idx = new int[] {i++, 1};
-       	 jname.set(idx, s);
+       	 Jname.set(idx, s);
         }
     	
     	
@@ -40,40 +40,40 @@ public class DataBasicDtrans {
         //jname = new String[] {"鄂黄新厂220"};
        
       
-        vi = new double[] {19.0};
-        vj = new double[] {230.0};
+        Vi = new double[] {19.0};
+        Vj = new double[] {230.0};
     }
 
     public MWCellArray getLname() {
-        return lname;
+        return Iname;
     }
 
     public void setLname(MWCellArray lname) {
-        this.lname = lname;
+        this.Iname = lname;
     }
 
     public MWCellArray getJname() {
-        return jname;
+        return Jname;
     }
 
-    public void setJname(MWCellArray jname) {
-        this.jname = jname;
+    public void setJname(MWCellArray Jname) {
+        this.Jname = Jname;
     }
 
     public double[] getVi() {
-        return vi;
+        return Vi;
     }
 
-    public void setVi(double[] vi) {
-        this.vi = vi;
+    public void setVi(double[] Vi) {
+        this.Vi = Vi;
     }
 
     public double[] getVj() {
-        return vj;
+        return Vj;
     }
 
-    public void setVj(double[] vj) {
-        this.vj = vj;
+    public void setVj(double[] Vj) {
+        this.Vj = Vj;
     }
 
 }

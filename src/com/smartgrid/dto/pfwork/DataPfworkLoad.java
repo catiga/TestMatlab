@@ -7,9 +7,9 @@ public class DataPfworkLoad {
 
      MWCellArray name;
      
-     double[] pl;
+     double[] PL;
      
-     double[] ql;
+     double[] QL;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -28,8 +28,8 @@ public class DataPfworkLoad {
         
     	 
     	 //name = new String[] {"鄂红石坡110"};
-         pl = new double[] {1.0};
-         ql = new double[] {1.0};
+         PL = new double[] {1.0};
+         QL = new double[] {1.0};
      }
 
     public MWCellArray getName() {
@@ -41,19 +41,19 @@ public class DataPfworkLoad {
     }
 
     public double[] getPl() {
-        return pl;
+        return PL;
     }
 
-    public void setPl(double[] pl) {
-        this.pl = pl;
+    public void setPl(double[] PL) {
+        this.PL = PL;
     }
 
     public double[] getQl() {
-        return ql;
+        return QL;
     }
 
-    public void setQl(double[] ql) {
-        this.ql = ql;
+    public void setQl(double[] QL) {
+        this.QL = QL;
     }
      
 }

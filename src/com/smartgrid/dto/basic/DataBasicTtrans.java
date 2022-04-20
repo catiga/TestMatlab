@@ -11,11 +11,11 @@ public class DataBasicTtrans {
      
      MWCellArray thrname;
      
-     double[] v1;
+     double[] V1;
      
-     double[] v2;
+     double[] V2;
      
-     double[] v3;
+     double[] V3;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -50,9 +50,9 @@ public class DataBasicTtrans {
          //twoname = new String[] {"鄂红石坡110"};
          //thrname = new String[] {"鄂红石坡11-1"};
          
-         v1 = new double[] {230.0};
-         v2 = new double[] {121.0};
-         v3 = new double[] {10.5};
+         V1 = new double[] {230.0};
+         V2 = new double[] {121.0};
+         V3 = new double[] {10.5};
      }
 
     public MWCellArray getOnename() {
@@ -80,27 +80,27 @@ public class DataBasicTtrans {
     }
 
     public double[] getV1() {
-        return v1;
+        return V1;
     }
 
-    public void setV1(double[] v1) {
-        this.v1 = v1;
+    public void setV1(double[] V1) {
+        this.V1 = V1;
     }
 
     public double[] getV2() {
-        return v2;
+        return V2;
     }
 
-    public void setV2(double[] v2) {
-        this.v2 = v2;
+    public void setV2(double[] V2) {
+        this.V2 = V2;
     }
 
     public double[] getV3() {
-        return v3;
+        return V3;
     }
 
     public void setV3(double[] v3) {
-        this.v3 = v3;
+        this.V3 = V3;
     }
      
 }
