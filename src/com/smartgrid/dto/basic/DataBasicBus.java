@@ -18,7 +18,8 @@ public class DataBasicBus {
     public DataBasicBus() {
         String[] tmp_busname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石220","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};
         busbase = new double[] {230.0,230.0,230.0,230.0,230.0,19.0,230.0,115,10.5};
-        String[] tmp_stationname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石220","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};
+        String[] tmp_stationname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石220","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};   
+        
         
         busname = new MWCellArray(new int[]{tmp_busname.length, 1});
         int i = 1;

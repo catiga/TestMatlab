@@ -11,9 +11,9 @@ public class DataPfresultGen {
      
      MWCellArray type;
      
-     double[] P;
+     double[] p;
      
-     double[] Q;
+     double[] q;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -48,8 +48,8 @@ public class DataPfresultGen {
     	 //name = new String[] {"鄂黄石210"};
          //busname = new String[] {"鄂黄石210"};
          //type = new String[] {"PV-PQ"};
-         P = new double[] {3.0};
-         Q = new double[] {1.0};
+         p = new double[] {3.0};
+         q = new double[] {1.0};
      }
 
     public MWCellArray getName() {
@@ -77,19 +77,19 @@ public class DataPfresultGen {
     }
 
     public double[] getP() {
-        return P;
+        return p;
     }
 
-    public void setP(double[] P) {
-        this.P = P;
+    public void setP(double[] p) {
+        this.p = p;
     }
 
     public double[] getQ() {
-        return Q;
+        return q;
     }
 
-    public void setQ(double[] Q) {
-        this.Q = Q;
+    public void setQ(double[] q) {
+        this.q = q;
     }
      
 }

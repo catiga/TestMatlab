@@ -13,17 +13,17 @@ public class DataPfresultTtrans {
      
      MWCellArray thrname;
      
-     double[] oneP;
+     double[] onep;
      
-     double[] oneQ;
+     double[] oneq;
      
-     double[] twoP;
+     double[] twop;
      
-     double[] twoQ;
+     double[] twoq;
      
-     double[] thrP;
+     double[] thrp;
      
-     double[] thrQ;
+     double[] thrq;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
@@ -69,12 +69,12 @@ public class DataPfresultTtrans {
          //onename = new String[] {"鄂红石坡220"};
          //twoname = new String[] {"鄂红石坡110"};
          //thrname = new String[] {"鄂红石坡11-1"};
-         oneP = new double[] {1.0};
-         oneQ = new double[] {1.0};
-         twoP = new double[] {1.0};
-         twoQ = new double[] {1.0};
-         thrP = new double[] {1.0};
-         thrQ = new double[] {1.0};
+         onep = new double[] {1.0};
+         oneq = new double[] {1.0};
+         twop = new double[] {1.0};
+         twoq = new double[] {1.0};
+         thrp = new double[] {1.0};
+         thrq = new double[] {1.0};
      }
 
     public MWCellArray getTransname() {
@@ -110,51 +110,51 @@ public class DataPfresultTtrans {
     }
 
     public double[] getOnep() {
-        return oneP;
+        return onep;
     }
 
-    public void setOnep(double[] oneP) {
-        this.oneP = oneP;
+    public void setOnep(double[] onep) {
+        this.onep = onep;
     }
 
     public double[] getOneq() {
-        return oneQ;
+        return oneq;
     }
 
-    public void setOneq(double[] oneQ) {
-        this.oneQ = oneQ;
+    public void setOneq(double[] oneq) {
+        this.oneq = oneq;
     }
 
     public double[] getTwop() {
-        return twoP;
+        return twop;
     }
 
-    public void setTwoP(double[] twoP) {
-        this.twoP = twoP;
+    public void setTwoP(double[] twop) {
+        this.twop = twop;
     }
 
     public double[] getTwoq() {
-        return twoQ;
+        return twoq;
     }
 
-    public void setTwoq(double[] twoQ) {
-        this.twoQ = twoQ;
+    public void setTwoq(double[] twoq) {
+        this.twoq = twoq;
     }
 
     public double[] getThrp() {
-        return thrP;
+        return thrp;
     }
 
-    public void setThrp(double[] thrP) {
-        this.thrP = thrP;
+    public void setThrp(double[] thrp) {
+        this.thrp = thrp;
     }
 
     public double[] getThrQ() {
-        return thrQ;
+        return thrq;
     }
 
-    public void setThrq(double[] thrQ) {
-        this.thrQ = thrQ;
+    public void setThrq(double[] thrq) {
+        this.thrq = thrq;
     }
      
 }
