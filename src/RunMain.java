@@ -7,9 +7,20 @@ import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfwork.DataPfwork;
+import com.smartgrid.dto.original.Branch;
+
 
 
 import dataInput_noncz.Class7;
+import test1_0422.Class4;
+//import test3_0422.Test3;
+import test30422.Test3;
+//import runpf_test.Class4;
+import dataInputnoncz.Class8;
+//import test1.Class1;
+//import dataInput.Class1;
+
+
 
 
 public class RunMain {
@@ -22,6 +33,8 @@ public class RunMain {
         MWStructArray databasic = new DataBasic().toM();
         MWStructArray pfwork = new DataPfwork().toM();
         MWStructArray pfresult = new DataPfresult().toM();
+        MWStructArray original = new Branch().toM();
+        
         
         System.out.println(databasic.toString());
         Gson g = new Gson();
@@ -48,13 +61,41 @@ public class RunMain {
 //        }
 
    
+//        Class4 c = new Class4();
+//        Object[] results = c.runpf_test(2,1,1);
+//        System.out.println(results[0]);
+        
       //dataInput_noncz.jar for testing the data name
-      Class7 c7 = new Class7();
-      Object[] results = c7.dataInput_noncz(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
-      System.out.println(results[0]);
-      System.out.println(results[1]);
-      System.out.println(results[2]);
+//      Class7 c7 = new Class7();
+//      Object[] results = c7.dataInput_noncz(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
+//      System.out.println(results[0]);
+//     System.out.println(results[1]);
+ //     System.out.println(results[2]);
       
+//      Test3 t3 = new Test3();
+//      Object[] results = t3.test30422(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
+//      System.out.println(results[0]);  
+        
+      Class8 c8 = new Class8();
+      Object[] results = c8.dataInputnoncz(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
+      System.out.println(results[0]);
+     System.out.println(results[1]);
+     System.out.println(results[2]);
+        
+        
+        
+    //dataInput
+//      Class1 c1 = new Class1();
+//      Object[] results1 = c1.dataInput(10, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult,maintancetarget,reliability,original);
+//     System.out.println(results1[0]);
+//      System.out.println(results1[1]);
+//      System.out.println(results1[2]);
+      
+//        Class4 c4 = new Class4();
+//        Object[] results4 = c4.test1_0422(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
+//        runpf pf = new runpf();
+//        Object[] result = pf.startpff(2);
+        
         
         
 //       MWNumericArray para1 = MWNumericArray.newInstance(new int[] {1}, new int[] {1}, MWClassID.INT32);

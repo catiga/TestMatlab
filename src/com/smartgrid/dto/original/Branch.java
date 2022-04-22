@@ -14,7 +14,7 @@ public class Branch {
     }
 	
 	public Branch() {
-		topo = new double[][]{{1, 1, 1}, {2, 1, 1}, {3, 1, 1}, {4, 1, 1}};
+		topo = new double[][]{{1, 1, 1, 1}, {2, 1, 1, 1}, {3, 1, 1, 1}, {4, 1, 1, 1}};
 		
 		String[] tmp_name = new String[] {"S1-新","S1-新","S1-新","S1-新","S1-新"};
 		
