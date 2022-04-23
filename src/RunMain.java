@@ -1,3 +1,5 @@
+import java.io.InterruptedIOException;
+
 import com.google.gson.Gson;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWClassID;
@@ -11,15 +13,8 @@ import com.smartgrid.dto.original.Branch;
 
 
 
-import dataInput_noncz.Class7;
-import test1_0422.Class4;
-//import test3_0422.Test3;
-import test30422.Test3;
-//import runpf_test.Class4;
-import dataInputnoncz.Class8;
-//import test1.Class1;
-//import dataInput.Class1;
 
+import calculate1.Calculate1;
 
 
 
@@ -38,9 +33,7 @@ public class RunMain {
         
         System.out.println(databasic.toString());
         Gson g = new Gson();
-//        System.out.println(g.toJson(databasic));
-//        System.out.println(g.toJson(pfwork));
-//        System.out.println(g.toJson(pfresult));
+
 
         String[] maintancetarget = new String[] {"鄂红石坡220"};
         Double[][] reliability = {
@@ -53,76 +46,16 @@ public class RunMain {
         };
         
         
-       // dataInput_0419_03 try to change
-//        Class5 c3 = new Class5();
-//        Object[] rs3 = c3.dataInput_0419_03(1, 230, databasic);
-//        for (int i=0; i<rs3.length; i++) {
-//        	 System.out.println(rs3[i]);
-//        }
+      
+        //Calculate jar1
+        Calculate1 c = new Calculate1();
+        Object [] results = c.calculate1(10, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult,maintancetarget,reliability,original);
+        for (int i=0;i<results.length;i++) {
+          System.out.println(results[i]);
+        }
+        
+        
 
-   
-//        Class4 c = new Class4();
-//        Object[] results = c.runpf_test(2,1,1);
-//        System.out.println(results[0]);
-        
-      //dataInput_noncz.jar for testing the data name
-//      Class7 c7 = new Class7();
-//      Object[] results = c7.dataInput_noncz(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
-//      System.out.println(results[0]);
-//     System.out.println(results[1]);
- //     System.out.println(results[2]);
-      
-//      Test3 t3 = new Test3();
-//      Object[] results = t3.test30422(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
-//      System.out.println(results[0]);  
-        
-      Class8 c8 = new Class8();
-      Object[] results = c8.dataInputnoncz(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
-      System.out.println(results[0]);
-     System.out.println(results[1]);
-     System.out.println(results[2]);
-        
-        
-        
-    //dataInput
-//      Class1 c1 = new Class1();
-//      Object[] results1 = c1.dataInput(10, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult,maintancetarget,reliability,original);
-//     System.out.println(results1[0]);
-//      System.out.println(results1[1]);
-//      System.out.println(results1[2]);
-      
-//        Class4 c4 = new Class4();
-//        Object[] results4 = c4.test1_0422(3, 100, 0.95, 1.05, 230, databasic, pfwork, pfresult);
-//        runpf pf = new runpf();
-//        Object[] result = pf.startpff(2);
-        
-        
-        
-//       MWNumericArray para1 = MWNumericArray.newInstance(new int[] {1}, new int[] {1}, MWClassID.INT32);
-//        MWCellArray para2 = new MWCellArray(new int[] {2, 2});
-//        for(int i=0; i<2; i++) {
-//            for(int j=0; j<2; j++) {
-//                Object arg1 = null;
-//                if(j==0) {
-//                    arg1 = "测试" + i;
-//                } else {
-//                    arg1 = i;
-//                }
-//                int[] idx = {i+1, j+1};
-//                para2.set(idx, arg1);
-//            }
-//        }
-//        
-//        Object[] objarray = (para2.toArray());
-//        for(Object o : objarray) {
-//            System.out.println(o);
-//        }
-//        
-//        MWNumericArray para3 = MWNumericArray.newInstance(new int[] {2, 2}, MWClassID.INT64, MWComplexity.REAL);
-//
-//        Class1 c = new Class1();
-//        Object result = c.Test0417_2(3, para1, para2, para3);
-//        System.out.println(result);
     }
 
 }

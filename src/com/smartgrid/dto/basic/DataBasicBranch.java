@@ -19,7 +19,7 @@ public class DataBasicBranch {
      
      int[][] uplimit;
      
-     String[] type;
+     MWCellArray type;
      
      int[][] id;
      
@@ -30,7 +30,8 @@ public class DataBasicBranch {
      public DataBasicBranch() {
          String[] tmp_Iname = new String[]{"鄂红石坡220","鄂红石坡220","鄂孝感220","鄂孝感220","鄂姚家冲220","鄂姚家冲220","鄂姚家冲220"};
          String[] tmp_Jname = new String[]{"鄂云梦220","鄂云梦220","鄂孝感1B220","鄂红石坡220","鄂孝感220","鄂孝感220","鄂红石坡220"};
-    	 double[][] tmp_rvalue = new double[7][1];
+         String[] tmp_type = new String[]{"0","0","0","0","0","0","0"};
+         double[][] tmp_rvalue = new double[7][1];
     	 double[][] tmp_xvalue = new double[7][1];
     	 double[][] tmp_bvalue = new double[7][1];
     	 int[][] tmp_rateka = new int[7][1];
@@ -72,6 +73,14 @@ public class DataBasicBranch {
         	 jname.set(idx, s);
          }
 
+         type = new MWCellArray(new int[]{tmp_type.length,1});
+         i = 1;
+         for(String s : tmp_type) {
+        	 int[] idx = new int[] {i++, 1};
+        	 type.set(idx, s);
+         }
+         
+         
          
          rvalue = tmp_rvalue;
   
@@ -84,7 +93,7 @@ public class DataBasicBranch {
          
          uplimit = tmp_uplimit;
          
-         type = new String[] {"0","0","0","0","0","0","0"};
+        
          
          id = tmp_id;
      }
@@ -146,11 +155,11 @@ public class DataBasicBranch {
         this.uplimit = uplimit;
     }
 
-    public String[] getType() {
+    public MWCellArray getType() {
         return type;
     }
 
-    public void setType(String[] type) {
+    public void setType(MWCellArray type) {
         this.type = type;
     }
 
