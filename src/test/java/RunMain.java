@@ -21,8 +21,6 @@ import riskAssessmentPart.Calculate5;
 import CalculateAnalyze.Calculate6;
 import CalculateAssess.Calculate7;
 
-
-
 public class RunMain {
 
     public static void main(String[] args) throws Exception {
