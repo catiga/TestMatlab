@@ -1,33 +1,22 @@
-import java.io.InterruptedIOException;
-
-import com.google.gson.Gson;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
-import com.mathworks.toolbox.javabuilder.MWClassID;
-import com.mathworks.toolbox.javabuilder.MWComplexity;
-import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dto.basic.DataBasic;
+import com.smartgrid.dto.maintancewire.branch;
+import com.smartgrid.dto.original.Branch;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfwork.DataPfwork;
-import com.smartgrid.dto.original.Branch;
-import com.smartgrid.dto.maintancewire.branch;
 
-
-
-import calculate1.Calculate1;
-import CalculatePf.Calculate3;
-import CalculteTopo.Class4;
-import riskAssessmentPart.Calculate5;
 import CalculateAnalyze.Calculate6;
 import CalculateAssess.Calculate7;
+import CalculatePf.Calculate3;
+import CalculteTopo.Class4;
+import calculate1.Calculate1;
+import riskAssessmentPart.Calculate5;
 
 public class RunMain {
 
     public static void main(String[] args) throws Exception {
         // TODO Auto-generated method stub
-        int[] dims = {1, 2};
-        MWNumericArray ii = MWNumericArray.newInstance(dims, MWClassID.DOUBLE, MWComplexity.REAL);
-        
         MWStructArray databasic = new DataBasic().toM();
         MWStructArray pfwork = new DataPfwork().toM();
         MWStructArray pfresult = new DataPfresult().toM();
@@ -35,8 +24,6 @@ public class RunMain {
         MWStructArray maintancewire = new branch().toM();
         
         System.out.println(databasic.toString());
-        Gson g = new Gson();
-
 
         String[] maintancetarget = new String[] {"鄂红石坡220"};
         Double[][] reliability = {
@@ -206,8 +193,7 @@ public class RunMain {
         //CalculateAssess-"defective jar"
         Calculate7 c7 = new Calculate7();
         Object [] results7 = c7.CalculateAssess(1,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,1.0,branch_numbers,branch_type,reliability,nodes_type);
-        
-
+        System.out.println(results7);
     }
 
 }
