@@ -1,19 +1,47 @@
 package com.smartgrid.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
+import com.smartgrid.dao.MolineDao;
+import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.dto.maintancewire.branch;
 import com.smartgrid.dto.original.Branch;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfwork.DataPfwork;
+import com.smartgrid.entity.Moline;
 
 import calculate1.Calculate1;
 
 @Service
 public class RepaireTaskService {
+	
+	@Autowired
+	private RepaireTaskDao taskDao;
+	
+	@Autowired
+	private MolineDao molineDao;
+	
+	/**
+	 * 获取busname数组数据方法
+	 * @param projId
+	 * @return
+	 */
+	public String[] buildBasicNameArray(Long projId) {
+		List<Moline> projectMolineData = molineDao.findByProjId(projId);
+		List<String> busNameArray = new ArrayList<String>();
+		for(Moline m : projectMolineData) {
+			busNameArray.add(m.getBusName());
+		}
+		
+		return busNameArray.toArray(new String[busNameArray.size()]);
+	}
 
 	public void compute() throws Exception {
 		MWStructArray databasic = new DataBasic().toM();

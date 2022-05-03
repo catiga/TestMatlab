@@ -1,6 +1,10 @@
 package com.smartgrid.response;
 
-public class ProtObj {
+import java.io.Serializable;
+
+public class ProtObj implements Serializable {
+	
+	private static final long serialVersionUID = 1l;
 
 	int errno;
 	
@@ -27,4 +31,29 @@ public class ProtObj {
 	public static ProtObj fail(int errno, String errmsg, Object data) {
 		return new ProtObj(errno, errmsg, data);
 	}
+
+	public int getErrno() {
+		return errno;
+	}
+
+	public void setErrno(int errno) {
+		this.errno = errno;
+	}
+
+	public String getErrmsg() {
+		return errmsg;
+	}
+
+	public void setErrmsg(String errmsg) {
+		this.errmsg = errmsg;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+	
 }

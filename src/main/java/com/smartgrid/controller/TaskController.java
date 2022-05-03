@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartgrid.dao.RepaireTaskDao;
@@ -21,7 +22,8 @@ public class TaskController {
 	@Autowired
 	private RepaireTaskDao taskDao;
 
-	@RequestMapping("/task/compute/{p}")
+	@ResponseBody
+	@RequestMapping("/task/compute/{id}")
     public ProtObj task_compute(@PathVariable(name="id") Long id) {
 		RepaireTask ee = taskDao.findById(id).orElse(null);
 
@@ -41,5 +43,18 @@ public class TaskController {
 		}
         return ProtObj.success(null);
     }
+	
+	@ResponseBody
+	@RequestMapping("/task/getBasicNameArray/{id}")
+	public ProtObj getBasicNameArray(@PathVariable(name = "id") Long id) {
+		RepaireTask ee = taskDao.findById(id).orElse(null);
+
+		if(ee==null) {
+			return ProtObj.fail(404, "object not found");
+		}
+		
+		String[] data = taskService.buildBasicNameArray(ee.getProjId());
+		return ProtObj.success(data);
+	}
 }
 
