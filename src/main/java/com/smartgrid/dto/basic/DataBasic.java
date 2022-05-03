@@ -19,11 +19,11 @@ public class DataBasic {
     }
 
     public DataBasic() throws Exception {
-        bus = new DataBasicBus().toM();
-        branch = new DataBasicBranch().toM();
-        dtrans = new DataBasicDtrans().toM();
-        ttrans = new DataBasicTtrans().toM();
-        gen = new DataBasicGen().toM();
+//        bus = new DataBasicBus().toM();
+//        branch = new DataBasicBranch().toM();
+//        dtrans = new DataBasicDtrans().toM();
+//        ttrans = new DataBasicTtrans().toM();
+//        gen = new DataBasicGen().toM();
     }
 
     public MWStructArray getBus() {

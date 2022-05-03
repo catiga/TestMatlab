@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartgrid.dao.RepaireTaskDao;
+import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.RepaireTaskService;
@@ -53,7 +54,7 @@ public class TaskController {
 			return ProtObj.fail(404, "object not found");
 		}
 		
-		String[] data = taskService.buildBasicNameArray(ee.getProjId());
+		DataBasic data = taskService.buildDataBasic(ee.getProjId());
 		return ProtObj.success(data);
 	}
 }
