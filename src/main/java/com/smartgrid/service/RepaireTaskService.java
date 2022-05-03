@@ -8,14 +8,29 @@ import org.springframework.stereotype.Service;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
+
+import com.smartgrid.dao.AclineDao;
+import com.smartgrid.dao.AlternatorDao;
 import com.smartgrid.dao.MolineDao;
+import com.smartgrid.dao.Threew_transformerDao;
+import com.smartgrid.dao.Tw_transformerDao;
 import com.smartgrid.dao.RepaireTaskDao;
+
 import com.smartgrid.dto.basic.DataBasic;
+import com.smartgrid.dto.basic.DataBasicBranch;
+import com.smartgrid.dto.basic.DataBasicBus;
+import com.smartgrid.dto.basic.DataBasicDtrans;
+import com.smartgrid.dto.basic.DataBasicGen;
+import com.smartgrid.dto.basic.DataBasicTtrans;
 import com.smartgrid.dto.maintancewire.branch;
 import com.smartgrid.dto.original.Branch;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfwork.DataPfwork;
+import com.smartgrid.entity.Acline;
+import com.smartgrid.entity.Alternator;
 import com.smartgrid.entity.Moline;
+import com.smartgrid.entity.Threew_transformer;
+import com.smartgrid.entity.Tw_transformer;
 
 import calculate1.Calculate1;
 
@@ -28,21 +43,150 @@ public class RepaireTaskService {
 	@Autowired
 	private MolineDao molineDao;
 	
+	@Autowired
+	private AclineDao aclineDao;
+	
+	@Autowired
+	private AlternatorDao alternatorDao;
+	
+	@Autowired
+	private Threew_transformerDao threew_transformerDao;
+	
+	@Autowired
+	private Tw_transformerDao tw_transformerDao;
+	/**
+	 *DataBasic
+	 */
+	public DataBasic buildDataBasic(Long projId) {
+		List<Moline> projectMolineData = molineDao.findByProjId(projId);
+		List<Acline> projectAclineData = aclineDao.findByProjId(projId);
+		List<Alternator> projectAlternatorData = alternatorDao.findByProjId(projId);
+		List<Threew_transformer> projectThreew_transformerData = threew_transformerDao.findByProjId(projId);
+		List<Tw_transformer> projectTw_transformerData = tw_transformerDao.findByProjId(projId);
+		
+		
+		
+		List<String> busNameArrayList = new ArrayList<>();
+		List<String> psNameArrayList = new ArrayList<>();
+		List<Double> baseKvArrayList = new ArrayList<>();
+		
+		List<String> branchI_nameArrayList = new ArrayList<>();
+		List<String> branchJ_nameArrayList = new ArrayList<>();
+		List<Double> branchR1ArrayList = new ArrayList<>();
+		List<Double> branchX1ArrayList = new ArrayList<>();
+		List<Double> branchB1ArrayList = new ArrayList<>();
+		List<Double> branchRatekaArrayList = new ArrayList<>();
+		List<Double> branchUplimitArrayList = new ArrayList<>();
+		List<String> branchTypeArrayList = new ArrayList<>();
+		List<Long> branchIdno = new ArrayList<>();
+		
+		List<String> genId_nameArrayList = new ArrayList<>();
+		
+		List<String> ttransOnenameArrayList = new ArrayList<>();
+		List<String> ttransTwonameArrayList = new ArrayList<>();
+		List<String> ttransThrnameArrayList = new ArrayList<>();
+		List<Double> ttransV1ArrayList = new ArrayList<>();
+		List<Double> ttransV2ArrayList = new ArrayList<>();
+		List<Double> ttransV3ArrayList = new ArrayList<>();
+		
+		List<String> dtransInameArrayList = new ArrayList<>();
+		List<String> dtransJnameArrayList = new ArrayList<>();
+		List<Double> dtransViArrayList = new ArrayList<>();
+		List<Double> dtransVjArrayList = new ArrayList<>();
+		
+		for(Moline m : projectMolineData) {
+			busNameArrayList.add(m.getBusName());
+			psNameArrayList.add(m.getPsName());
+			baseKvArrayList.add(m.getBaseKv().doubleValue());
+		}
+		
+		for(Acline m : projectAclineData) {
+			branchI_nameArrayList.add(m.getLname());
+			branchJ_nameArrayList.add(m.getJ_name());
+			branchR1ArrayList.add(m.getR1().doubleValue());
+			branchX1ArrayList.add(m.getX1().doubleValue());
+			branchB1ArrayList.add(m.getB1_half().doubleValue());
+			branchRatekaArrayList.add(m.getRate_ka().doubleValue());
+			branchUplimitArrayList.add(m.getUp_limit().doubleValue());
+			branchTypeArrayList.add(m.getType());
+			branchIdno.add(m.getId_no());
+		}
+		
+		for(Alternator m : projectAlternatorData) {
+			genId_nameArrayList.add(m.getId_name());
+		}
+		
+		for(Threew_transformer m : projectThreew_transformerData) {
+			ttransOnenameArrayList.add(m.getName_1());
+			ttransTwonameArrayList.add(m.getName_2());
+			ttransThrnameArrayList.add(m.getName_3());
+			ttransV1ArrayList.add(m.getTap1().doubleValue());
+			ttransV2ArrayList.add(m.getTap2().doubleValue());
+			ttransV3ArrayList.add(m.getTap3().doubleValue());
+		}
+		
+		for(Tw_transformer m : projectTw_transformerData) {
+			dtransInameArrayList.add(m.getLname());
+			dtransJnameArrayList.add(m.getJ_name());
+			dtransViArrayList.add(m.getV0_tap1().doubleValue());
+			dtransVjArrayList.add(m.getV0_tap2().doubleValue());
+		}
+		
+		
+		
+		
+		DataBasicBus basicBus = new DataBasicBus(busNameArrayList, baseKvArrayList, psNameArrayList);
+		DataBasicBranch basicBranch = new DataBasicBranch(branchI_nameArrayList, branchJ_nameArrayList, branchTypeArrayList, branchUplimitArrayList, branchX1ArrayList, branchB1ArrayList, branchUplimitArrayList, branchRatekaArrayList, branchIdno);
+		DataBasicGen basicGen = new DataBasicGen(genId_nameArrayList);
+		DataBasicTtrans basicTtrans = new DataBasicTtrans(ttransOnenameArrayList, ttransTwonameArrayList, ttransThrnameArrayList, ttransV1ArrayList, ttransV2ArrayList, ttransV3ArrayList);
+		DataBasicDtrans basicDtrans = new DataBasicDtrans(dtransInameArrayList, dtransJnameArrayList, dtransViArrayList, dtransVjArrayList);
+				
+		try {
+			DataBasic basic = new DataBasic();
+			basic.setBus(basicBranch.toM());
+			basic.setBus(basicGen.toM());
+			basic.setBus(basicTtrans.toM());
+			basic.setBus(basicBus.toM());
+			basic.setBus(basicDtrans.toM());
+
+			return basic;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 获取busname数组数据方法
 	 * @param projId
 	 * @return
 	 */
-	public String[] buildBasicNameArray(Long projId) {
-		List<Moline> projectMolineData = molineDao.findByProjId(projId);
-		List<String> busNameArray = new ArrayList<String>();
-		for(Moline m : projectMolineData) {
-			busNameArray.add(m.getBusName());
-		}
-		
-		return busNameArray.toArray(new String[busNameArray.size()]);
-	}
-
+	
+	
+	/*
+	 * public String[] buildBasicNameArray(Long projId) { List<Moline>
+	 * projectMolineData = molineDao.findByProjId(projId); List<String> busNameArray
+	 * = new ArrayList<String>(); for(Moline m : projectMolineData) {
+	 * busNameArray.add(m.getBusName()); }
+	 * 
+	 * return busNameArray.toArray(new String[busNameArray.size()]); }
+	 */
+	
+	
 	public void compute() throws Exception {
 		MWStructArray databasic = new DataBasic().toM();
         MWStructArray pfwork = new DataPfwork().toM();
