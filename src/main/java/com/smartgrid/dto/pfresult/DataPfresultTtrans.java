@@ -1,7 +1,11 @@
  package com.smartgrid.dto.pfresult;
 
+import java.util.List;
+
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
+import com.smartgrid.entity.ThreewTransformerResult;
+import com.smartgrid.entity.TwTransformerResult;
 
 public class DataPfresultTtrans {
 
@@ -13,148 +17,157 @@ public class DataPfresultTtrans {
      
      MWCellArray thrname;
      
-     double[] onep;
+     double[][] onep;
      
-     double[] oneq;
+     double[][] oneq;
      
-     double[] twop;
+     double[][] twop;
      
-     double[] twoq;
+     double[][] twoq;
      
-     double[] thrp;
+     double[][] thrp;
      
-     double[] thrq;
+     double[][] thrq;
      
      public MWStructArray toM() throws Exception {
          return MWStructArray.fromBean(this);
      }
      
-     public DataPfresultTtrans() {
-    	 String[] tmp_transname = new String[]{"鄂红石坡站主变"};
-    	 String[] tmp_onename = new String[]{"鄂红石坡220"};
-         String[] tmp_twoname = new String[]{"鄂红石坡110"};
-         String[] tmp_thrname = new String[]{"鄂红石坡11-1"};
-         transname = new MWCellArray(new int[]{tmp_transname.length,1});
-         int i = 1;
+     public DataPfresultTtrans(List<ThreewTransformerResult> data) {
+    	 
+    	 onep = new double[data.size()][1];
+    	 twop = new double[data.size()][1];
+    	 thrp = new double[data.size()][1];
+    	 oneq = new double[data.size()][1];
+    	 twoq = new double[data.size()][1];
+    	 thrq = new double[data.size()][1];
+    	 String[]tmp_transname = new String[data.size()];
+    	 String[]tmp_onename = new String[data.size()];
+    	 String[]tmp_twoname = new String[data.size()];
+    	 String[]tmp_thrname = new String[data.size()];
+    	 for(int i = 0; i < data.size(); i++) {
+    		 ThreewTransformerResult tmpObj = data.get(i);
+    		 onep[i][0] = tmpObj.getActive_power_generation1().doubleValue();
+    		 twop[i][0] = tmpObj.getActive_power_generation2().doubleValue();
+    		 thrp[i][0] = tmpObj.getActive_power_generation3().doubleValue();
+    		 oneq[i][0] = tmpObj.getReactive_power_generation1().doubleValue();
+    		 twoq[i][0] = tmpObj.getReactive_power_generation2().doubleValue();
+    		 thrq[i][0] = tmpObj.getReactive_power_generation3().doubleValue();
+    		 tmp_transname[i] = tmpObj.getName();
+    		 tmp_onename[i] = tmpObj.getSide_bus1(); 
+    		 tmp_twoname[i] = tmpObj.getSide_bus2(); 
+    		 tmp_thrname[i] = tmpObj.getSide_bus3(); 
+ 		}
+    	 
+    	 transname = new MWCellArray(new int[]{tmp_transname.length, 1});
+    	 onename = new MWCellArray(new int[]{tmp_onename.length, 1});
+    	 twoname = new MWCellArray(new int[]{tmp_twoname.length, 1});
+    	 thrname = new MWCellArray(new int[]{tmp_thrname.length, 1});
+    	 int i = 1;
          for(String s : tmp_transname) {
-        	 int[] idx = new int[] {i++, 1};
-        	 transname.set(idx, s);
+             int[] idx = new int[] {i++, 1};
+             transname.set(idx, s);
          }
-         
-         onename = new MWCellArray(new int[]{tmp_onename.length,1});
          i = 1;
          for(String s : tmp_onename) {
-        	 int[] idx = new int[] {i++, 1};
-        	 onename.set(idx, s);
+             int[] idx = new int[] {i++, 1};
+             onename.set(idx, s);
          }
-         
-         twoname = new MWCellArray(new int[]{tmp_twoname.length,1});
          i = 1;
          for(String s : tmp_twoname) {
-        	 int[] idx = new int[] {i++, 1};
-        	 twoname.set(idx, s);
+             int[] idx = new int[] {i++, 1};
+             twoname.set(idx, s);
          }
-    	 
-         thrname = new MWCellArray(new int[]{tmp_thrname.length,1});
          i = 1;
          for(String s : tmp_thrname) {
-        	 int[] idx = new int[] {i++, 1};
-        	 thrname.set(idx, s);
+             int[] idx = new int[] {i++, 1};
+             thrname.set(idx, s);
          }
     	 
     	 
     	 
-    	 
-    	 //transname = new String[] {"鄂红石坡站主变"};
-         //onename = new String[] {"鄂红石坡220"};
-         //twoname = new String[] {"鄂红石坡110"};
-         //thrname = new String[] {"鄂红石坡11-1"};
-         onep = new double[] {1.0};
-         oneq = new double[] {1.0};
-         twop = new double[] {1.0};
-         twoq = new double[] {1.0};
-         thrp = new double[] {1.0};
-         thrq = new double[] {1.0};
      }
 
-    public MWCellArray getTransname() {
-        return transname;
-    }
+	public MWCellArray getTransname() {
+		return transname;
+	}
 
-    public void setTransname(MWCellArray transname) {
-        this.transname = transname;
-    }
+	public void setTransname(MWCellArray transname) {
+		this.transname = transname;
+	}
 
-    public MWCellArray getOnename() {
-        return onename;
-    }
+	public MWCellArray getOnename() {
+		return onename;
+	}
 
-    public void setOnename(MWCellArray onename) {
-        this.onename = onename;
-    }
+	public void setOnename(MWCellArray onename) {
+		this.onename = onename;
+	}
 
-    public MWCellArray getTwoname() {
-        return twoname;
-    }
+	public MWCellArray getTwoname() {
+		return twoname;
+	}
 
-    public void setTwoname(MWCellArray twoname) {
-        this.twoname = twoname;
-    }
+	public void setTwoname(MWCellArray twoname) {
+		this.twoname = twoname;
+	}
 
-    public MWCellArray getThrname() {
-        return thrname;
-    }
+	public MWCellArray getThrname() {
+		return thrname;
+	}
 
-    public void setThrname(MWCellArray thrname) {
-        this.thrname = thrname;
-    }
+	public void setThrname(MWCellArray thrname) {
+		this.thrname = thrname;
+	}
 
-    public double[] getOnep() {
-        return onep;
-    }
+	public double[][] getOnep() {
+		return onep;
+	}
 
-    public void setOnep(double[] onep) {
-        this.onep = onep;
-    }
+	public void setOnep(double[][] onep) {
+		this.onep = onep;
+	}
 
-    public double[] getOneq() {
-        return oneq;
-    }
+	public double[][] getOneq() {
+		return oneq;
+	}
 
-    public void setOneq(double[] oneq) {
-        this.oneq = oneq;
-    }
+	public void setOneq(double[][] oneq) {
+		this.oneq = oneq;
+	}
 
-    public double[] getTwop() {
-        return twop;
-    }
+	public double[][] getTwop() {
+		return twop;
+	}
 
-    public void setTwoP(double[] twop) {
-        this.twop = twop;
-    }
+	public void setTwop(double[][] twop) {
+		this.twop = twop;
+	}
 
-    public double[] getTwoq() {
-        return twoq;
-    }
+	public double[][] getTwoq() {
+		return twoq;
+	}
 
-    public void setTwoq(double[] twoq) {
-        this.twoq = twoq;
-    }
+	public void setTwoq(double[][] twoq) {
+		this.twoq = twoq;
+	}
 
-    public double[] getThrp() {
-        return thrp;
-    }
+	public double[][] getThrp() {
+		return thrp;
+	}
 
-    public void setThrp(double[] thrp) {
-        this.thrp = thrp;
-    }
+	public void setThrp(double[][] thrp) {
+		this.thrp = thrp;
+	}
 
-    public double[] getThrQ() {
-        return thrq;
-    }
+	public double[][] getThrq() {
+		return thrq;
+	}
 
-    public void setThrq(double[] thrq) {
-        this.thrq = thrq;
-    }
+	public void setThrq(double[][] thrq) {
+		this.thrq = thrq;
+	}
+
+   
      
 }

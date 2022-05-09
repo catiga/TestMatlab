@@ -15,9 +15,10 @@ public class DataPfwork {
      }
      
      public DataPfwork() throws Exception {
-         branch = new DataPfworkBranch().toM();
-         gen = new DataPfworkGen().toM();
-         load = new DataPfworkLoad().toM();
+			/*
+			 * branch = new DataPfworkBranch().toM(); gen = new DataPfworkGen().toM(); load
+			 * = new DataPfworkLoad().toM();
+			 */
      }
 
     public MWStructArray getBranch() {

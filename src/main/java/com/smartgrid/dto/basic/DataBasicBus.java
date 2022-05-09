@@ -4,12 +4,13 @@ import java.util.List;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
+import com.smartgrid.entity.Moline;
 
 public class DataBasicBus {
 
     MWCellArray busname;
 
-    Double[] busbase;
+    double[][] busbase;
 
     MWCellArray stationname;
     
@@ -17,64 +18,57 @@ public class DataBasicBus {
         return MWStructArray.fromBean(this);
     }
     
-    public DataBasicBus(List<String> tmp_busname, List<Double> base_kv, List<String> ps_name) {
-    	this.busbase = base_kv.toArray(new Double[base_kv.size()]);
-    	busname = new MWCellArray(new int[]{tmp_busname.size(), 1});
-        int i = 1;
-        for(String s : tmp_busname) {
-            int[] idx = new int[] {i++, 1};
-            busname.set(idx, s);
-        }
-        i = 1;
-        stationname = new MWCellArray(new int[] {ps_name.size(), 1});
-        for(String s : ps_name) {
-            int[] idx = new int[] {i++, 1};
-            stationname.set(idx, s);
-        }
+    public DataBasicBus(List<Moline> data) {
+    	 busbase = new double[data.size()][1];
+    	 String[]tmp_busname = new String[data.size()];
+    	 String[]tmp_stationname = new String[data.size()];
+    	 
+    	 for(int i = 0; i < data.size(); i++) {
+    		 Moline tmpObj = data.get(i);
+    		 busbase[i][0] = tmpObj.getBaseKv().doubleValue();
+    		 tmp_busname[i] = tmpObj.getBusName(); 
+    		 tmp_stationname[i] = tmpObj.getPsName(); 
+ 		}
+    	 
+    	 busname = new MWCellArray(new int[]{tmp_busname.length, 1});
+    	 stationname = new MWCellArray(new int[]{tmp_stationname.length, 1});
+    	 int i = 1;
+         for(String s : tmp_busname) {
+             int[] idx = new int[] {i++, 1};
+             busname.set(idx, s);
+         }
+         i = 1;
+         for(String s : tmp_stationname) {
+             int[] idx = new int[] {i++, 1};
+             stationname.set(idx, s);
+         }
     }
 
- //   public DataBasicBus() {
- //       String[] tmp_busname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石220","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};
- //       busbase = new Double[] {230.0,230.0,230.0,230.0,230.0,19.0,230.0,115.0,10.5};
- //       String[] tmp_stationname = new String[] {"鄂云梦220","鄂红石坡220","鄂孝感220","鄂孝感1B220","鄂姚家冲220","鄂黄石220","鄂黄新厂220","鄂红石坡110","鄂红石坡11-1"};   
-        
-        
- //       busname = new MWCellArray(new int[]{tmp_busname.length, 1});
- //       int i = 1;
- //       for(String s : tmp_busname) {
- //           int[] idx = new int[] {i++, 1};
- //           busname.set(idx, s);
-  //      }
- //       i = 1;
- //       stationname = new MWCellArray(new int[] {tmp_stationname.length, 1});
- //       for(String s : tmp_stationname) {
- //           int[] idx = new int[] {i++, 1};
- //           stationname.set(idx, s);
- //       }
-  //  }
+	public MWCellArray getBusname() {
+		return busname;
+	}
 
-    public MWCellArray getBusname() {
-        return busname;
-    }
+	public void setBusname(MWCellArray busname) {
+		this.busname = busname;
+	}
 
-    public void setBusname(MWCellArray busname) {
-        this.busname = busname;
-    }
+	public double[][] getBusbase() {
+		return busbase;
+	}
 
-    public Double[] getBusbase() {
-        return busbase;
-    }
+	public void setBusbase(double[][] busbase) {
+		this.busbase = busbase;
+	}
 
-    public void setBusbase(Double[] busbase) {
-        this.busbase = busbase;
-    }
+	public MWCellArray getStationname() {
+		return stationname;
+	}
 
-    public MWCellArray getStationname() {
-        return stationname;
-    }
+	public void setStationname(MWCellArray stationname) {
+		this.stationname = stationname;
+	}
 
-    public void setStationname(MWCellArray stationname) {
-        this.stationname = stationname;
-    }
+
+    
 
 }

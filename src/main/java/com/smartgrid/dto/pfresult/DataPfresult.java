@@ -15,9 +15,10 @@ public class DataPfresult {
      }
      
      public DataPfresult() throws Exception {
-         gen = new DataPfresultGen().toM();
-         dtrans = new DataPfresultDtrans().toM();
-         ttrans = new DataPfresultTtrans().toM();
+			/*
+			 * gen = new DataPfresultGen().toM(); dtrans = new DataPfresultDtrans().toM();
+			 * ttrans = new DataPfresultTtrans().toM();
+			 */
      }
 
     public MWStructArray getGen() {

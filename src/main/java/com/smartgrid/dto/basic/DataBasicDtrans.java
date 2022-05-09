@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
+import com.smartgrid.entity.Acline;
+import com.smartgrid.entity.Tw_transformer;
 
 public class DataBasicDtrans {
 
@@ -11,78 +13,83 @@ public class DataBasicDtrans {
 
     MWCellArray jname;
 
-    Double[] vi;
+    double[][] vi;
 
-    Double[] vj;
+    double[][] vj;
     
     public MWStructArray toM() throws Exception {
         return MWStructArray.fromBean(this);
     }
 
     
-    public DataBasicDtrans(List<String> tmp_Iname, List<String> tmp_Jname,List<Double> tmp_vi, List<Double> tmp_vj) {
-    	
-        kname = new MWCellArray(new int[]{tmp_Iname.size(),1});
-        int i = 1;
-        for(String s : tmp_Iname) {
-       	 int[] idx = new int[] {i++, 1};
-       	 kname.set(idx, s);
+    public DataBasicDtrans(List<Tw_transformer> data) {
+     vi = new double[data.size()][1];
+   	 vj = new double[data.size()][1];
+   	 String[]tmp_kname = new String[data.size()];
+   	 String[]tmp_jname = new String[data.size()];
+
+   	 for(int i = 0; i < data.size(); i++) {
+   		Tw_transformer tmpObj = data.get(i);
+   		 vi[i][0] = tmpObj.getV0_tap1().doubleValue();
+   		 vj[i][0] = tmpObj.getV0_tap2().doubleValue();
+   		 tmp_kname[i] = tmpObj.getLname(); 
+   		 tmp_jname[i] = tmpObj.getJ_name(); 
+		}
+   	 
+   	 kname = new MWCellArray(new int[]{tmp_kname.length, 1});
+   	 jname = new MWCellArray(new int[]{tmp_jname.length, 1});
+   	 int i = 1;
+        for(String s : tmp_kname) {
+            int[] idx = new int[] {i++, 1};
+            kname.set(idx, s);
+        }
+        i = 1;
+        for(String s : tmp_jname) {
+            int[] idx = new int[] {i++, 1};
+            jname.set(idx, s);
         }
         
-        jname= new MWCellArray(new int[]{tmp_Jname.size(),1});
-        i = 1;
-        for(String s : tmp_Jname) {
-       	 int[] idx = new int[] {i++, 1};
-       	 jname.set(idx, s);
-        }
-    	
-        this.vi = tmp_vi.toArray(new Double[tmp_vi.size()]);
-        this.vj = tmp_vj.toArray(new Double[tmp_vj.size()]); 
     }
+
+
+	public MWCellArray getKname() {
+		return kname;
+	}
+
+
+	public void setKname(MWCellArray kname) {
+		this.kname = kname;
+	}
+
+
+	public MWCellArray getJname() {
+		return jname;
+	}
+
+
+	public void setJname(MWCellArray jname) {
+		this.jname = jname;
+	}
+
+
+	public double[][] getVi() {
+		return vi;
+	}
+
+
+	public void setVi(double[][] vi) {
+		this.vi = vi;
+	}
+
+
+	public double[][] getVj() {
+		return vj;
+	}
+
+
+	public void setVj(double[][] vj) {
+		this.vj = vj;
+	}
     
     
-	/*
-	 * public DataBasicDtrans() { String[] tmp_Iname = new String[]{"鄂黄石210"};
-	 * String[] tmp_Jname = new String[]{"鄂黄新厂220"};
-	 * 
-	 * kname = new MWCellArray(new int[]{tmp_Iname.length,1}); int i = 1; for(String
-	 * s : tmp_Iname) { int[] idx = new int[] {i++, 1}; kname.set(idx, s); }
-	 * 
-	 * jname= new MWCellArray(new int[]{tmp_Jname.length,1}); i = 1; for(String s :
-	 * tmp_Jname) { int[] idx = new int[] {i++, 1}; jname.set(idx, s); } vi = new
-	 * double[] {19.0}; vj = new double[] {230.0}; }
-	 */
-
-    public MWCellArray getLname() {
-        return kname;
-    }
-
-    public void setLname(MWCellArray kname) {
-        this.kname = kname;
-    }
-
-    public MWCellArray getJname() {
-        return jname;
-    }
-
-    public void setJname(MWCellArray jname) {
-        this.jname = jname;
-    }
-
-    public Double[] getVi() {
-        return vi;
-    }
-
-    public void setVi(Double[] vi) {
-        this.vi = vi;
-    }
-
-    public Double[] getVj() {
-        return vj;
-    }
-
-    public void setVj(Double[] vj) {
-        this.vj = vj;
-    }
-
 }

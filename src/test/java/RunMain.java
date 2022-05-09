@@ -20,7 +20,7 @@ public class RunMain {
         MWStructArray databasic = new DataBasic().toM();
         MWStructArray pfwork = new DataPfwork().toM();
         MWStructArray pfresult = new DataPfresult().toM();
-        MWStructArray original = new Branch().toM();
+        MWStructArray original = new Branch(null).toM();
         MWStructArray maintancewire = new branch().toM();
         
         System.out.println(databasic.toString());
@@ -171,7 +171,7 @@ public class RunMain {
           }
         //CalculateTopo
         Class4 c4 = new Class4();
-        Object [] results4 = c4.CalculteTopo(7,case5_Tables_level,case5_bus,case5_generator,case5_branch,substation_target,exMatchIn,maintancewire,Table_mainwire);
+        Object [] results4 = c4.CalculteTopo(7,case5_Tables_level,case5_bus,case5_generator,case5_branch,substation_target,exMatchIn,original,Table_mainwire);
         for (int i4=0;i4<results4.length;i4++) {
             System.out.println(results4[i4]);
           }
