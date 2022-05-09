@@ -59,12 +59,12 @@ public class TaskController {
 		MWNumericArray loadLevelArea = (MWNumericArray)retData[8];	// 这行数据为空
 		MWNumericArray componentRelibility = (MWNumericArray)retData[9];
 		
-		int numberofe = busLevel.numberOfElements();
-		int[] indexCol = busLevel.columnIndex();
-		int[] diemsns = busLevel.getDimensions();
-		int did = busLevel.numberOfDimensions();
+//		int numberofe = busLevel.numberOfElements();
+//		int[] indexCol = busLevel.columnIndex();
+//		int[] diemsns = busLevel.getDimensions();
+//		int did = busLevel.numberOfDimensions();
 		
-		double[][] busleveldataarray = (double[][])busLevel.toDoubleArray();
+		Object doublearray = busLevel.toDoubleArray();
         return ProtObj.success(null);
     }
 	
