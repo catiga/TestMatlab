@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
+import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.entity.RepaireTask;
@@ -31,11 +34,37 @@ public class TaskController {
 		}
 		
 		Long projId = ee.getProjId();
+		Object[] retData = null;
 		try {
-			taskService.compute(projId);
+			retData = taskService.compute(projId);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		if(retData==null) {
+			return ProtObj.fail(500, "compute failed");
+		}
+		//处理入库逻辑
+		MWNumericArray busLevel = (MWNumericArray)retData[0];
+		MWNumericArray branchLevel = (MWNumericArray)retData[1];
+		MWNumericArray generatorLevel = (MWNumericArray)retData[2];
+		
+		MWStructArray nameShowLevelArea = (MWStructArray)retData[3];
+		
+		MWNumericArray busLevelArea = (MWNumericArray)retData[4];
+		MWNumericArray branchLevelArea = (MWNumericArray)retData[5];
+		MWNumericArray generatorLevelArea = (MWNumericArray)retData[6];
+		
+		MWCellArray tableNodesLevelProvinceArea = (MWCellArray)retData[7];
+		
+		MWNumericArray loadLevelArea = (MWNumericArray)retData[8];	// 这行数据为空
+		MWNumericArray componentRelibility = (MWNumericArray)retData[9];
+		
+		int numberofe = busLevel.numberOfElements();
+		int[] indexCol = busLevel.columnIndex();
+		int[] diemsns = busLevel.getDimensions();
+		int did = busLevel.numberOfDimensions();
+		
+		double[][] busleveldataarray = (double[][])busLevel.toDoubleArray();
         return ProtObj.success(null);
     }
 	

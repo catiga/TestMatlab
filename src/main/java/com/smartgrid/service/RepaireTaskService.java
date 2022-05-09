@@ -202,18 +202,15 @@ public class RepaireTaskService {
 	 * reliability
 	 */
 
-	public void compute(Long projId) throws Exception {
+	public Object[] compute(Long projId) throws Exception {
 		MWStructArray databasic = this.buildDataBasic(projId).toM();
 		MWStructArray pfwork = this.buildDataPfwork(projId).toM();
 		MWStructArray pfresult = this.buildDataPfresult(projId).toM();
 		MWStructArray original = this.buildbranch(projId).toM();
-		MWStructArray maintancewire = new branch().toM();
+//		MWStructArray maintancewire = new branch().toM();
 
 		System.out.println(databasic.toString());
 
-		String[] maintancetarget = new String[] { "鄂木兰220" };
-
-		
 		//讀取reliability
 		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(projId);
 		double[][] relibilityDataArray = new double[relibilityData.size()][3];
@@ -232,6 +229,8 @@ public class RepaireTaskService {
 		
 		RepaireTask task = taskData.get(0);
 		
+		String[] maintancetarget = new String[] {task.getStationName()};
+		
 		BigDecimal benchValue = BigDecimal.valueOf(0.0);
 		BigDecimal vminValue = BigDecimal.valueOf(0.0);
 		BigDecimal vmaxValue = BigDecimal.valueOf(0.0);
@@ -249,10 +248,12 @@ public class RepaireTaskService {
 		// Calculate1
 		Object[] objects = pfwork.toArray();
 		Calculate1 c = new Calculate1();
-		Object[] results = c.calculate1(10, 100.0, 0.95, 1.05, 230.0, databasic, pfwork, pfresult, maintancetarget,
+		Object[] results = c.calculate1(10, benchValue.doubleValue(), vminValue.doubleValue(), vmaxValue.doubleValue(), task.getBaseKv().doubleValue(), databasic, pfwork, pfresult, maintancetarget,
 				relibilityDataArray, original);
 //		System.out.println(results[4]);
 //		System.out.println(results[3]);
+		
+		return results;
 
 	}
 }
