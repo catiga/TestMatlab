@@ -56,9 +56,7 @@ import com.smartgrid.entity.TwTransformerResult;
 import com.smartgrid.entity.Tw_transformer;
 
 import calculate1.Calculate1;
-import testDataInput.TestDataInput;
-import testDataInputPfwork.TestDataInputPfwork;
-import testDataInputPfresult.TestDataInputPfresult;
+
 @Service
 public class RepaireTaskService {
 
@@ -369,23 +367,7 @@ public class RepaireTaskService {
 			}
 		}
 		
-//		TestDataInput c = new TestDataInput();
-//		Object[] results = c.testDataInput(25,databasic);
-//		for (int i1 = 0; i1 < results.length; i1++) {
-//			System.out.println(results[i1]);
-//		}
-		
-//		TestDataInputPfwork c1 = new TestDataInputPfwork();
-//		Object[] result1 = c1.testDataInputPfwork(17,pfwork);
-//		for (int i1 = 0; i1 < result1.length; i1++) {
-//			System.out.println(result1[i1]);
-//		}
-		
-//		TestDataInputPfresult c2 = new TestDataInputPfresult();
-//		Object[] result2 = c2.testDataInputPfresult(19,pfresult);
-//		for (int i1 = 0; i1 < result2.length; i1++) {
-//			System.out.println(result2[0]);
-//		}
+
 		
 		// Calculate1
 		Object[] objects = pfwork.toArray();
