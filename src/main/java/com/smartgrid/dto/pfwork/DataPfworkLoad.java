@@ -25,13 +25,10 @@ public class DataPfworkLoad {
 		String[] tmp_name = new String[data.size()];
 		for (int i = 0; i < data.size(); i++) {
 			LoadTrend tmpObj = data.get(i);
-			try {
-				pl[i][0] = tmpObj.getPl().doubleValue();
-				ql[i][0] = tmpObj.getQl().doubleValue();
-				tmp_name[i] = tmpObj.getId_name();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			pl[i][0] = tmpObj.getPl().doubleValue();
+			ql[i][0] = tmpObj.getQl().doubleValue();
+			tmp_name[i] = tmpObj.getNode_name();
+
 		}
 
 		name = new MWCellArray(new int[] { tmp_name.length, 1 });
