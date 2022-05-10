@@ -64,7 +64,9 @@ public class TaskController {
 //		int[] diemsns = busLevel.getDimensions();
 //		int did = busLevel.numberOfDimensions();
 		
-		Object doublearray = busLevel.toDoubleArray();
+//		int[] diemsnsLoad = loadLevelArea.getDimensions();
+		
+//		Object doublearray = busLevel.toDoubleArray();
         return ProtObj.success(null);
     }
 	

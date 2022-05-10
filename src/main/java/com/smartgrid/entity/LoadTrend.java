@@ -26,6 +26,9 @@ public class LoadTrend implements Serializable {
 	@Column(name = "id_name")
 	private String id_name;
 	
+	@Column(name = "node_name")
+	private String node_name;
+	
 	@Column(name = "pl")
 	private BigDecimal pl;
 	
@@ -62,6 +65,14 @@ public class LoadTrend implements Serializable {
 		this.id_name = id_name;
 	}
 
+	public String getNode_name() {
+		return node_name;
+	}
+
+	public void setNode_name(String node_name) {
+		this.node_name = node_name;
+	}
+
 	public BigDecimal getPl() {
 		return pl;
 	}
@@ -94,6 +105,7 @@ public class LoadTrend implements Serializable {
 		this.aTime = aTime;
 	}
 
+	
 	
 	
 	

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.AclineDao;
 import com.smartgrid.dao.AclineTrendDao;
@@ -250,6 +251,13 @@ public class RepaireTaskService {
 		Calculate1 c = new Calculate1();
 		Object[] results = c.calculate1(10, benchValue.doubleValue(), vminValue.doubleValue(), vmaxValue.doubleValue(), task.getBaseKv().doubleValue(), databasic, pfwork, pfresult, maintancetarget,
 				relibilityDataArray, original);
+//		MWNumericArray busLevelAreaTest = (MWNumericArray)results[4];
+//		System.out.println(busLevelAreaTest.toString());
+//		MWNumericArray loadTest = (MWNumericArray)results[8];	
+//		System.out.println(loadTest.toString());
+		
+//		System.out.println(results[4]);
+		
 //		System.out.println(results[4]);
 //		System.out.println(results[3]);
 		
