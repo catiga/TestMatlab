@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mathworks.toolbox.javabuilder.MWCellArray;
-import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.AclineDao;
 import com.smartgrid.dao.AclineTrendDao;
@@ -30,7 +28,6 @@ import com.smartgrid.dto.basic.DataBasicBus;
 import com.smartgrid.dto.basic.DataBasicDtrans;
 import com.smartgrid.dto.basic.DataBasicGen;
 import com.smartgrid.dto.basic.DataBasicTtrans;
-import com.smartgrid.dto.maintancewire.branch;
 import com.smartgrid.dto.original.Branch;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfresult.DataPfresultDtrans;
@@ -105,6 +102,10 @@ public class RepaireTaskService {
 
 	@Autowired
 	private ProjectParamDao projectParamDao;
+	
+	public void updateTask(RepaireTask task) {
+		taskDao.save(task);
+	}
 
 	/**
 	 * DataBasic
@@ -210,8 +211,6 @@ public class RepaireTaskService {
 		MWStructArray original = this.buildbranch(projId).toM();
 //		MWStructArray maintancewire = new branch().toM();
 
-		System.out.println(databasic.toString());
-
 		//讀取reliability
 		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(projId);
 		double[][] relibilityDataArray = new double[relibilityData.size()][3];
@@ -247,19 +246,9 @@ public class RepaireTaskService {
 		}
 	
 		// Calculate1
-		Object[] objects = pfwork.toArray();
 		Calculate1 c = new Calculate1();
 		Object[] results = c.calculate1(10, benchValue.doubleValue(), vminValue.doubleValue(), vmaxValue.doubleValue(), task.getBaseKv().doubleValue(), databasic, pfwork, pfresult, maintancetarget,
 				relibilityDataArray, original);
-//		MWNumericArray busLevelAreaTest = (MWNumericArray)results[4];
-//		System.out.println(busLevelAreaTest.toString());
-//		MWNumericArray loadTest = (MWNumericArray)results[8];	
-//		System.out.println(loadTest.toString());
-		
-//		System.out.println(results[4]);
-		
-//		System.out.println(results[4]);
-//		System.out.println(results[3]);
 		
 		return results;
 

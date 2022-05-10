@@ -34,6 +34,8 @@ public class RepaireTask implements Serializable {
 	@Column(name = "proj_id")
 	private Long projId;
 	
+	private Integer computing;
+	
 	@Column(name = "flag")
 	private Integer flag;
 
@@ -91,6 +93,14 @@ public class RepaireTask implements Serializable {
 
 	public void setFlag(Integer flag) {
 		this.flag = flag;
+	}
+
+	public Integer getComputing() {
+		return computing;
+	}
+
+	public void setComputing(Integer computing) {
+		this.computing = computing;
 	}
 	
 }

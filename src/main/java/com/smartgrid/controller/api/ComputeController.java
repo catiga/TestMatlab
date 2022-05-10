@@ -45,6 +45,7 @@ public class ComputeController extends WrapperController {
 			return ProtObj.fail(404, "repaire task not defined");
 		}
 		
+		
 		Long projId = ee.getProjId();
 		Object[] retData = null;
 		try {
@@ -55,55 +56,56 @@ public class ComputeController extends WrapperController {
 		if(retData==null) {
 			return ProtObj.fail(500, "compute failed");
 		}
+		//变更计算状态
+		ee.setComputing(1);
+		taskService.updateTask(ee);
+		
 		//处理入库逻辑
-		MWNumericArray busLevel = (MWNumericArray)retData[0];
-		MWNumericArray branchLevel = (MWNumericArray)retData[1];
-		MWNumericArray generatorLevel = (MWNumericArray)retData[2];
-		
-		MWStructArray nameShowLevelArea = (MWStructArray)retData[3];
-		
-		MWNumericArray busLevelArea = (MWNumericArray)retData[4];
-		MWNumericArray branchLevelArea = (MWNumericArray)retData[5];
-		MWNumericArray generatorLevelArea = (MWNumericArray)retData[6];
-		
-		MWCellArray tableNodesLevelProvinceArea = (MWCellArray)retData[7];
-		
-		MWNumericArray loadLevelArea = (MWNumericArray)retData[8];	// 这行数据为空
-		MWNumericArray componentRelibility = (MWNumericArray)retData[9];
-		
-		double[][] busLevelArray = (double[][])busLevel.toDoubleArray();
-		double[][] branchLevelArray = (double[][])branchLevel.toDoubleArray();
-		double[][] generatorLevelArray = (double[][])generatorLevel.toDoubleArray();
-		
-//		Map<String, Integer> fieldsMap = new HashMap<String, Integer>();
-//		String[] names = nameShowLevelArea.fieldNames();
-//		for(int i=0; i<names.length; i++) {
-//			fieldsMap.put(names[i], i + 1);
-//		}
-//		
-//		Object[][] busData = (Object[][])nameShowLevelArea.get(fieldsMap.get("bus"));
-//		Object[][] branchData = (Object[][])nameShowLevelArea.get(fieldsMap.get("tbranch"));
-//		
-//		Object[][] genData = (Object[][])nameShowLevelArea.get(fieldsMap.get("gen"));
-//		Object[][] fbranchData = (Object[][])nameShowLevelArea.get(fieldsMap.get("fbranch"));
-//		Object[][] loadData = (Object[][])nameShowLevelArea.get(fieldsMap.get("load"));
-		
-		Map<String, List<String>> nameShowLevelArray = this.buildStringFromStructArray(nameShowLevelArea);
-		double[][] busLevelAreaArray = (double[][])busLevelArea.toDoubleArray();
-		double[][] branchLevelAreaArray = (double[][])branchLevelArea.toDoubleArray();
-		double[][] generatorLevelAreaArray = (double[][])generatorLevelArea.toDoubleArray();
-		
-		List<Object[]> provinceDataArray = this.buildDataFromCellArray(tableNodesLevelProvinceArea);
-		double[][] loadLevelAreaArray = (double[][])loadLevelArea.toDoubleArray();
-		double[][] componentRelibilityArray = (double[][])componentRelibility.toDoubleArray();
-		
-		c1Service.saveRepaireTaskComputeData(busLevelArray, branchLevelArray, generatorLevelArray, 
-				nameShowLevelArray,
-				busLevelAreaArray, branchLevelAreaArray, generatorLevelAreaArray,
-				provinceDataArray,
-				loadLevelAreaArray, componentRelibilityArray,
-				projId);
-        return ProtObj.success(null);
+		try {
+			MWNumericArray busLevel = (MWNumericArray)retData[0];
+			MWNumericArray branchLevel = (MWNumericArray)retData[1];
+			MWNumericArray generatorLevel = (MWNumericArray)retData[2];
+			
+			MWStructArray nameShowLevelArea = (MWStructArray)retData[3];
+			
+			MWNumericArray busLevelArea = (MWNumericArray)retData[4];
+			MWNumericArray branchLevelArea = (MWNumericArray)retData[5];
+			MWNumericArray generatorLevelArea = (MWNumericArray)retData[6];
+			
+			MWCellArray tableNodesLevelProvinceArea = (MWCellArray)retData[7];
+			
+			MWNumericArray loadLevelArea = (MWNumericArray)retData[8];	// 这行数据为空
+			MWNumericArray componentRelibility = (MWNumericArray)retData[9];
+			
+			double[][] busLevelArray = (double[][])busLevel.toDoubleArray();
+			double[][] branchLevelArray = (double[][])branchLevel.toDoubleArray();
+			double[][] generatorLevelArray = (double[][])generatorLevel.toDoubleArray();
+			
+			Map<String, List<String>> nameShowLevelArray = this.buildStringFromStructArray(nameShowLevelArea);
+			double[][] busLevelAreaArray = (double[][])busLevelArea.toDoubleArray();
+			double[][] branchLevelAreaArray = (double[][])branchLevelArea.toDoubleArray();
+			double[][] generatorLevelAreaArray = (double[][])generatorLevelArea.toDoubleArray();
+			
+			List<Object[]> provinceDataArray = this.buildDataFromCellArray(tableNodesLevelProvinceArea);
+			double[][] loadLevelAreaArray = (double[][])loadLevelArea.toDoubleArray();
+			double[][] componentRelibilityArray = (double[][])componentRelibility.toDoubleArray();
+			
+			c1Service.saveRepaireTaskComputeData(busLevelArray, branchLevelArray, generatorLevelArray, 
+					nameShowLevelArray,
+					busLevelAreaArray, branchLevelAreaArray, generatorLevelAreaArray,
+					provinceDataArray,
+					loadLevelAreaArray, componentRelibilityArray,
+					projId);
+			ee.setComputing(2);
+			taskService.updateTask(ee);
+			
+	        return ProtObj.success(null);
+		} catch(Exception e) {
+			e.printStackTrace();
+			ee.setComputing(3);	//返回计算失败
+			taskService.updateTask(ee);
+			return ProtObj.fail(500, e.toString());
+		}
 	}
 	
 	/**
