@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.AclineDao;
 import com.smartgrid.dao.AclineTrendDao;
@@ -22,6 +23,7 @@ import com.smartgrid.dao.ThreewTransformerResultDao;
 import com.smartgrid.dao.Threew_transformerDao;
 import com.smartgrid.dao.TwTransformerResultDao;
 import com.smartgrid.dao.Tw_transformerDao;
+import com.smartgrid.dao.C1BusLevelAreaDao;
 import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.dto.basic.DataBasicBranch;
 import com.smartgrid.dto.basic.DataBasicBus;
@@ -52,8 +54,13 @@ import com.smartgrid.entity.ThreewTransformerResult;
 import com.smartgrid.entity.Threew_transformer;
 import com.smartgrid.entity.TwTransformerResult;
 import com.smartgrid.entity.Tw_transformer;
+import com.smartgrid.entity.C1BusLevelArea;
+
 
 import calculate1.Calculate1;
+import calculatePf.CalculatePf;
+
+
 
 @Service
 public class RepaireTaskService {
@@ -98,10 +105,14 @@ public class RepaireTaskService {
 	private ThreewTransformerResultDao threewTransformerResultDao;
 
 	@Autowired
-	private ComponentReliabilityDao componentReliabilityDao;
+	private ComponentReliabilityDao C1BusLevelAreaDao;
 
 	@Autowired
 	private ProjectParamDao projectParamDao;
+	
+	@Autowired
+	private ComponentReliabilityDao componentReliabilityDao;
+	
 	
 	public void updateTask(RepaireTask task) {
 		taskDao.save(task);
@@ -250,7 +261,32 @@ public class RepaireTaskService {
 		Object[] results = c.calculate1(10, benchValue.doubleValue(), vminValue.doubleValue(), vmaxValue.doubleValue(), task.getBaseKv().doubleValue(), databasic, pfwork, pfresult, maintancetarget,
 				relibilityDataArray, original);
 		
+//		return results;
+		
+		/**
+		 * 测试calculatepf
+		 * 从数据库读取bus_level_area、branch_level_area、generator_level_area
+		 */
+//		List<C1BusLevelArea> c1BusLevelArea = C1BusLevelAreaDao.findByProjId(projId);
+//		double[][] relibilityDataArray = new double[relibilityData.size()][3];
+//		int index = 0;
+//		for(ComponentReliability c : relibilityData) {
+			
+//			relibilityDataArray[index][0] = new BigDecimal(c.getBranchType()).doubleValue();
+//			relibilityDataArray[index][1] = c.getFailureRate().doubleValue();
+//			relibilityDataArray[index][2] = c.getRepairTime().doubleValue();
+//			index++;
+//		}
+		
+		
+		
+		
+		// CalculatePf
+		CalculatePf cpf = new CalculatePf();
+		Object[] result1 = cpf.calculatePf(10,benchValue.doubleValue(),results[4],results[5] ,results[6],results[7]);
+		
+		MWCellArray busname = (MWCellArray)result1[6];
+		
 		return results;
-
 	}
 }

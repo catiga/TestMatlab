@@ -8,7 +8,7 @@ import com.smartgrid.dto.pfwork.DataPfwork;
 
 import CalculateAnalyze.Calculate6;
 import CalculateAssess.Calculate7;
-import CalculatePf.Calculate3;
+import calculatePf.CalculatePf;
 import CalculteTopo.Class4;
 import calculate1.Calculate1;
 import riskAssessmentPart.Calculate5;
@@ -164,11 +164,11 @@ public class RunMain {
         }
         
         //CalculatePf
-        Calculate3 c3 = new Calculate3();
-        Object [] results3 = c3.CalculatePf(2, 100.0, case5_bus,case5_branch,case5_generator);
-        for (int i2=0;i2<results3.length;i2++) {
-            System.out.println(results3[i2]);
-          }
+		/*
+		 * // Calculate3 c3 = new Calculate3(); Object [] results3 = c3.CalculatePf(2,
+		 * 100.0, case5_bus,case5_branch,case5_generator); for (int
+		 * i2=0;i2<results3.length;i2++) { System.out.println(results3[i2]); }
+		 */
         //CalculateTopo
         Class4 c4 = new Class4();
         Object [] results4 = c4.CalculteTopo(7,case5_Tables_level,case5_bus,case5_generator,case5_branch,substation_target,exMatchIn,original,Table_mainwire);
