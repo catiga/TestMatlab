@@ -88,7 +88,7 @@ public class C1GeneratorLevel implements Serializable {
 	public C1GeneratorLevel() {}
 	
 	public C1GeneratorLevel(double[] _13data, Long projId) {
-		if(_13data.length==13) {
+		if(_13data.length==21) {
 			this.gl1 = new BigDecimal(_13data[0]);
 			this.gl2 = new BigDecimal(_13data[1]);
 			this.gl3 = new BigDecimal(_13data[2]);

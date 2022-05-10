@@ -1,5 +1,6 @@
 package com.smartgrid.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -9,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "c1_ table_nodes_level_province_area")
-public class C1TableProvinceArea {
+@Table(name = "c1_table_nodes_level_province_area")
+public class C1TableNodeLevelProvince implements Serializable {
 
 	private static final long serialVersionUID = 1l;
 	
@@ -23,6 +24,13 @@ public class C1TableProvinceArea {
 	private String v2;
 	
 	private BigDecimal v3;
+	
+	public C1TableNodeLevelProvince(BigDecimal v1, String v2, BigDecimal v3, Long projId) {
+		this.v1 = v1;
+		this.v2 = v2;
+		this.v3 = v3;
+		this.projId = projId;
+	}
 	
 	@Column(name = "proj_id")
 	private Long projId;
