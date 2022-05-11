@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWException;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.smartgrid.dao.C1BranchLevelAreaDao;
 import com.smartgrid.dao.C1BranchLevelDao;
 import com.smartgrid.dao.C1BusLevelAreaDao;
@@ -18,11 +20,16 @@ import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1LoadLevelDao;
 import com.smartgrid.dao.C1NameShowLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
+import com.smartgrid.dao.CpfComputeResultDao;
+import com.smartgrid.dao.TaskLoadFlowDao;
 import com.smartgrid.entity.C1BranchLevelArea;
 import com.smartgrid.entity.C1BusLevelArea;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
+import com.smartgrid.entity.CpfComputeResult;
+import com.smartgrid.entity.TaskLoadFlow;
 import com.smartgrid.response.ProtObj;
+import com.smartgrid.util.ToolKit;
 
 import calculatePf.CalculatePf;
 
@@ -59,11 +66,22 @@ public class ComputeService {
 	@Autowired
 	private C1ComponentRelibilityDao componentRelibilityDao;
 	
-	public ProtObj computePf(Long projId, BigDecimal sBase) {
-		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(projId);
-		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(projId);
-		List<C1GeneratorLevelArea> generatorLevelAreaData = generatorLevelAreaDao.findByProjId(projId);
-		List<C1TableNodeLevelProvince> tableNodeAreaData = tableNodeLevelProvinceDao.findByProjId(projId);
+	@Autowired
+	private CpfComputeResultDao pfResultDao;
+	
+	@Autowired
+	private TaskLoadFlowDao loadFlowDao;
+	
+	public TaskLoadFlow getPfTask(Long id) {
+		return loadFlowDao.getOne(id);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) {
+		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
+		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(task.getProjId());
+		List<C1GeneratorLevelArea> generatorLevelAreaData = generatorLevelAreaDao.findByProjId(task.getProjId());
+		List<C1TableNodeLevelProvince> tableNodeAreaData = tableNodeLevelProvinceDao.findByProjId(task.getProjId());
 		
 		//检查数据
 		if(busLevelAreaData==null || busLevelAreaData.isEmpty()) {
@@ -160,14 +178,57 @@ public class ComputeService {
 		}
 		try {
 			CalculatePf pfComputer = new CalculatePf();
-			//test(delete for a while)
-			System.out.println(busLevelArray.toString());
-			System.out.println(branchLevelArray.toString());
-			System.out.println(generatorLevelArray.toString());
+			Object [] realData = pfComputer.calculatePf(10, sBase.doubleValue(), busLevelArray, branchLevelArray, generatorLevelArray, tableNodeArray);
 			
-			Object [] result = pfComputer.calculatePf(10, sBase.doubleValue(), busLevelArray, branchLevelArray, generatorLevelArray, tableNodeArray);
+			//处理数据
+			MWNumericArray d1 = (MWNumericArray)realData[0];
+			MWNumericArray d2 = (MWNumericArray)realData[1];
+			MWNumericArray d3 = (MWNumericArray)realData[2];
+			MWNumericArray d4 = (MWNumericArray)realData[3];
+			MWNumericArray d5 = (MWNumericArray)realData[4];
+			MWNumericArray d6 = (MWNumericArray)realData[5];
 			
-			return ProtObj.success(result);
+			MWCellArray d7 = (MWCellArray)realData[6];
+			MWCellArray d8 = (MWCellArray)realData[7];
+			MWCellArray d9 = (MWCellArray)realData[8];
+			MWCellArray d10 = (MWCellArray)realData[9];
+			
+			//开始处理数据
+			double baseMVA = d1.getDouble();
+			double[][] busArray = (double[][])d2.toDoubleArray();
+			double[][] branchArray = (double[][])d3.toDoubleArray();
+			double[][] genArray = (double[][])d4.toDoubleArray();
+			int success = d5.getInt();
+			double et = d6.getDouble();
+			
+			//处理剩余四个
+			String busStr = ToolKit.doubleArrayToString(busArray);
+			String branchStr = ToolKit.doubleArrayToString(branchArray);
+			String genStr = ToolKit.doubleArrayToString(genArray);
+			
+			String busNameStr = ToolKit.cellArrayToString(d7);
+			String branchFnameStr = ToolKit.cellArrayToString(d8);
+			String branchTnameStr = ToolKit.cellArrayToString(d9);
+			String genNameStr = ToolKit.cellArrayToString(d10);
+			
+			CpfComputeResult compute = new CpfComputeResult();
+			compute.setBaseMva(new BigDecimal(baseMVA));
+			compute.setBranch(branchStr);
+			compute.setBranchFname(branchFnameStr);
+			compute.setBranchTname(branchTnameStr);
+			compute.setBus(busStr);
+			compute.setBusName(busNameStr);
+			compute.setEt(new BigDecimal(et));
+			compute.setGen(genStr);
+			compute.setGenName(genNameStr);
+			compute.setProjId(task.getProjId());
+			compute.setTaskId(task.getId());
+			compute.setSuccess(success);
+			
+			pfResultDao.deleteByTaskId(task.getId());
+			pfResultDao.save(compute);
+			
+			return ProtObj.success(compute);
 		} catch(MWException mex) {
 			mex.printStackTrace();
 			return ProtObj.fail(501, mex.toString());

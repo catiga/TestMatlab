@@ -15,9 +15,10 @@ import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.controller.api.wrapper.WrapperController;
 import com.smartgrid.dao.RepaireTaskDao;
+import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.ProjectParam;
 import com.smartgrid.entity.RepaireTask;
-import com.smartgrid.entity.SysProject;
+import com.smartgrid.entity.TaskLoadFlow;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.C1Service;
 import com.smartgrid.service.ComputeService;
@@ -120,15 +121,15 @@ public class ComputeController extends WrapperController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/api/tide/compute/{proj_id}")
-	public ProtObj tide_compute(@PathVariable(name="proj_id") Long proj_id) {
-		SysProject project = sysService.getSysProject(proj_id);
-		if(project==null) {
-			return ProtObj.fail(404, "project not found");
+	@RequestMapping("/api/tide/compute/{task_id}")
+	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) {
+		TaskLoadFlow task = computeService.getPfTask(task_id);
+		if(task==null) {
+			return ProtObj.fail(404, "task not found");
 		}
-		//TODO 这里执行潮流计算逻辑
+		
 		//查询数据
-		List<ProjectParam> projectParams = sysService.findProjectParams(project.getId());
+		List<ProjectParam> projectParams = sysService.findProjectParams(task.getProjId());
 		//获取sbase
 		BigDecimal sBase = null;
 		if(projectParams!=null) {
@@ -138,8 +139,22 @@ public class ComputeController extends WrapperController {
 				}
 			}
 		}
-		ProtObj ret = computeService.computePf(project.getId(), sBase);
+		if(sBase==null) {
+			return ProtObj.fail(405, "project params not set");
+		}
+		ProtObj ret = computeService.computePf(task, sBase);
 		
-		return ProtObj.success(1);
+		CpfComputeResult realData = null;
+		if(ret.getErrno()!=0) {
+			return ret;
+		}
+		if(ret.getData()!=null) {
+			realData = (CpfComputeResult)ret.getData();
+		}
+		if(realData==null) {
+			return ProtObj.fail(900, "compute failed");
+		}
+		
+		return ret;
 	}
 }
