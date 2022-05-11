@@ -25,15 +25,17 @@ public class C1TableNodeLevelProvince implements Serializable {
 	
 	private BigDecimal v3;
 	
+	@Column(name = "proj_id")
+	private Long projId;
+	
+	public C1TableNodeLevelProvince() {}
+	
 	public C1TableNodeLevelProvince(BigDecimal v1, String v2, BigDecimal v3, Long projId) {
 		this.v1 = v1;
 		this.v2 = v2;
 		this.v3 = v3;
 		this.projId = projId;
 	}
-	
-	@Column(name = "proj_id")
-	private Long projId;
 
 	public Long getId() {
 		return id;

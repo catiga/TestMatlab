@@ -1,5 +1,6 @@
 package com.smartgrid.controller.api;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +15,12 @@ import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.controller.api.wrapper.WrapperController;
 import com.smartgrid.dao.RepaireTaskDao;
+import com.smartgrid.entity.ProjectParam;
 import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.entity.SysProject;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.C1Service;
+import com.smartgrid.service.ComputeService;
 import com.smartgrid.service.RepaireTaskService;
 import com.smartgrid.service.SysService;
 
@@ -35,6 +38,9 @@ public class ComputeController extends WrapperController {
 	
 	@Autowired
 	private C1Service c1Service;
+	
+	@Autowired
+	private ComputeService computeService;
 
 	@ResponseBody
 	@RequestMapping("/api/task/compute/{task_id}")
@@ -120,7 +126,20 @@ public class ComputeController extends WrapperController {
 		if(project==null) {
 			return ProtObj.fail(404, "project not found");
 		}
-		//TODO 这里执行潮流计算和结果入库逻辑
+		//TODO 这里执行潮流计算逻辑
+		//查询数据
+		List<ProjectParam> projectParams = sysService.findProjectParams(project.getId());
+		//获取sbase
+		BigDecimal sBase = null;
+		if(projectParams!=null) {
+			for(ProjectParam pp : projectParams) {
+				if(pp.getParamK().equals("bench_value")) {
+					sBase = pp.getParamV(); break;
+				}
+			}
+		}
+		ProtObj ret = computeService.computePf(project.getId(), sBase);
+		
 		return ProtObj.success(1);
 	}
 }
