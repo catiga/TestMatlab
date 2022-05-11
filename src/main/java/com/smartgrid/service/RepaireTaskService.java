@@ -23,7 +23,6 @@ import com.smartgrid.dao.ThreewTransformerResultDao;
 import com.smartgrid.dao.Threew_transformerDao;
 import com.smartgrid.dao.TwTransformerResultDao;
 import com.smartgrid.dao.Tw_transformerDao;
-import com.smartgrid.dao.C1BusLevelAreaDao;
 import com.smartgrid.dto.basic.DataBasic;
 import com.smartgrid.dto.basic.DataBasicBranch;
 import com.smartgrid.dto.basic.DataBasicBus;
@@ -54,13 +53,9 @@ import com.smartgrid.entity.ThreewTransformerResult;
 import com.smartgrid.entity.Threew_transformer;
 import com.smartgrid.entity.TwTransformerResult;
 import com.smartgrid.entity.Tw_transformer;
-import com.smartgrid.entity.C1BusLevelArea;
-
 
 import calculate1.Calculate1;
 import calculatePf.CalculatePf;
-
-
 
 @Service
 public class RepaireTaskService {
