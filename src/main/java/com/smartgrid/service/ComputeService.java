@@ -160,6 +160,11 @@ public class ComputeService {
 		}
 		try {
 			CalculatePf pfComputer = new CalculatePf();
+			//test(delete for a while)
+			System.out.println(busLevelArray.toString());
+			System.out.println(branchLevelArray.toString());
+			System.out.println(generatorLevelArray.toString());
+			
 			Object [] result = pfComputer.calculatePf(10, sBase.doubleValue(), busLevelArray, branchLevelArray, generatorLevelArray, tableNodeArray);
 			
 			return ProtObj.success(result);
