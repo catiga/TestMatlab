@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
+import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.C1BranchLevelAreaDao;
 import com.smartgrid.dao.C1BranchLevelDao;
 import com.smartgrid.dao.C1BusLevelAreaDao;
@@ -21,17 +22,25 @@ import com.smartgrid.dao.C1LoadLevelDao;
 import com.smartgrid.dao.C1NameShowLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.CpfComputeResultDao;
+import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dao.TaskLoadFlowDao;
+import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.entity.C1BranchLevelArea;
 import com.smartgrid.entity.C1BusLevelArea;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
+import com.smartgrid.entity.ComponentBranch;//add-LC
+import com.smartgrid.entity.RepaireTask;//add-LC
 import com.smartgrid.entity.CpfComputeResult;
+
 import com.smartgrid.entity.TaskLoadFlow;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.ToolKit;
+import com.smartgrid.dto.original.Branch;
 
+import CalculteTopo.CalculateTopo;//add-LC
 import calculatePf.CalculatePf;
+
 
 @Service
 public class ComputeService {
@@ -72,17 +81,29 @@ public class ComputeService {
 	@Autowired
 	private TaskLoadFlowDao loadFlowDao;
 	
+	@Autowired
+	private Component_branchDao component_branchDao;//add-LC
+	
+	@Autowired
+	private RepaireTaskDao taskDao;//add-LC
+	
+
 	public TaskLoadFlow getPfTask(Long id) {
 		return loadFlowDao.getOne(id);
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) {
+	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) throws Exception {//add-LC
 		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
 		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(task.getProjId());
 		List<C1GeneratorLevelArea> generatorLevelAreaData = generatorLevelAreaDao.findByProjId(task.getProjId());
 		List<C1TableNodeLevelProvince> tableNodeAreaData = tableNodeLevelProvinceDao.findByProjId(task.getProjId());
 		
+		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
+        List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
+		
+        
+
 		//检查数据
 		if(busLevelAreaData==null || busLevelAreaData.isEmpty()) {
 			return ProtObj.fail(401, "bus level area data empty");
@@ -99,8 +120,63 @@ public class ComputeService {
 		if(tableNodeAreaData==null || tableNodeAreaData.isEmpty()) {
 			return ProtObj.fail(403, "table node level area data empty");
 		}
+		if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
+			return ProtObj.fail(403, "Component Branch Data empty");//add-LC
+		}
+		if(taskData==null || taskData.isEmpty()) {
+			return ProtObj.fail(403, "Task Data");//add-LC
+		}
+		
+		
 		
 		//开始封装数据转换
+		//add-LC- build the data structure of exMatchIn and TableMainwireElements
+		
+		Branch branch = new Branch(projectComponentBranchData);//add-LC
+		MWStructArray original = branch.toM();//add-LC
+		
+		
+		RepaireTask taskdata = taskData.get(0);//add-LC
+		String[] maintanceTarget = new String[] {taskdata.getStationName()};//add-LC
+		
+		double[][]tmp_exMatchIn_num = new double[12][1];
+		for(int i = 0; i<tmp_exMatchIn_num.length; i++) {
+			tmp_exMatchIn_num[i][0] = i+1.0;
+		}
+		tmp_exMatchIn_num[10][0] = 44.0;
+		tmp_exMatchIn_num[11][0] = 48.0;
+		String[][]tmp_exMatchIn_str = {
+				{"鄂府河220"},{"鄂府河220"},{"鄂临空港220"},{"鄂环城220"},{"鄂环城220"},
+				{"鄂李家墩220"},{"鄂李家墩220"},{"鄂德胜堂220-2"},{"鄂江滩220"},{"鄂岱家山220"},
+				{"鄂木兰1B220"},{"鄂木兰2B220"}
+		};
+		
+		MWCellArray exMatchIn = new MWCellArray(new int[]{tmp_exMatchIn_num.length, 2});
+		int j = 1;
+		int k = 1;
+		for(int i = 0; i<tmp_exMatchIn_num.length; i++) {
+			int[] idx1 = new int[] {j++, 1};
+			int[] idx2 = new int[] {k++, 2};
+			exMatchIn.set(idx1, tmp_exMatchIn_num[i][0]);
+			exMatchIn.set(idx2, tmp_exMatchIn_str[i][0]);
+		}
+		
+		String[]tmp_TableMainwireElements = {
+				"S1-1","进线B1","S1-2","S1-3",
+				"S2-1","进线B2","S2-2","S2-3",
+				"S3-1","进线B3","S3-2","S3-3",
+				"S4-1","进线B4","S4-2","S4-3"
+		};
+		MWCellArray TableMainwireElements = new MWCellArray(new int[]{tmp_TableMainwireElements.length, 1});
+		int i = 1;
+		for(String t : tmp_TableMainwireElements) {
+			int[] idx = new int[] {i++, 1};
+			TableMainwireElements.set(idx, t);
+		}
+		//add-LC
+		
+		
+		
 		double[][] busLevelArray = new double[busLevelAreaData.size()][13];
 		double[][] branchLevelArray = new double[branchLevelAreaData.size()][13];
 		double[][] generatorLevelArray = new double[generatorLevelAreaData.size()][21];
@@ -180,6 +256,11 @@ public class ComputeService {
 			CalculatePf pfComputer = new CalculatePf();
 			Object [] realData = pfComputer.calculatePf(10, sBase.doubleValue(), busLevelArray, branchLevelArray, generatorLevelArray, tableNodeArray);
 			
+			CalculateTopo topoComputer = new CalculateTopo();//
+			Object [] topoData = topoComputer.CalculteTopo(9, tableNodeArray, busLevelArray, generatorLevelArray, branchLevelArray, maintanceTarget,exMatchIn ,original,TableMainwireElements);//add-LC
+			
+			
+			
 			//处理数据
 			MWNumericArray d1 = (MWNumericArray)realData[0];
 			MWNumericArray d2 = (MWNumericArray)realData[1];
@@ -193,11 +274,23 @@ public class ComputeService {
 			MWCellArray d9 = (MWCellArray)realData[8];
 			MWCellArray d10 = (MWCellArray)realData[9];
 			
+			//add LC-处理数据
+			MWNumericArray t1 = (MWNumericArray)topoData[0];
+			MWNumericArray t2 = (MWNumericArray)topoData[1];
+			MWNumericArray t3 = (MWNumericArray)topoData[2];
+			MWNumericArray t4 = (MWNumericArray)topoData[3];
+			MWNumericArray t5 = (MWNumericArray)topoData[4];
+			MWNumericArray t6 = (MWNumericArray)topoData[5];
+			MWNumericArray t7 = (MWNumericArray)topoData[6];
+			MWNumericArray t8 = (MWNumericArray)topoData[7];
+			
+			MWCellArray t9 = (MWCellArray)realData[8];// add LC
+			
 			//开始处理数据
 			double baseMVA = d1.getDouble();
 			double[][] busArray = (double[][])d2.toDoubleArray();
-			double[][] branchArray = (double[][])d3.toDoubleArray();
-			double[][] genArray = (double[][])d4.toDoubleArray();
+			double[][] genArray = (double[][])d3.toDoubleArray();
+			double[][] branchArray = (double[][])d4.toDoubleArray();
 			int success = d5.getInt();
 			double et = d6.getDouble();
 			
@@ -210,6 +303,13 @@ public class ComputeService {
 			String branchFnameStr = ToolKit.cellArrayToString(d8);
 			String branchTnameStr = ToolKit.cellArrayToString(d9);
 			String genNameStr = ToolKit.cellArrayToString(d10);
+			
+			//add LC-开始处理数据
+
+			
+			//add LC
+			
+			
 			
 			CpfComputeResult compute = new CpfComputeResult();
 			compute.setBaseMva(new BigDecimal(baseMVA));

@@ -119,10 +119,11 @@ public class ComputeController extends WrapperController {
 	 * 潮流计算
 	 * @param proj_id
 	 * @return
+	 * @throws Exception //aa LC
 	 */
 	@ResponseBody
 	@RequestMapping("/api/tide/compute/{task_id}")
-	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) {
+	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) throws Exception {
 		TaskLoadFlow task = computeService.getPfTask(task_id);
 		if(task==null) {
 			return ProtObj.fail(404, "task not found");

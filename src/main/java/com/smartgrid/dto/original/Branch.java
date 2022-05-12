@@ -8,7 +8,7 @@ import com.smartgrid.entity.ComponentBranch;
 
 public class Branch {
 
-	Integer[][] topo ;
+	Double[][] topo ;
 	
 	MWCellArray name;
 	
@@ -17,15 +17,15 @@ public class Branch {
     }
 	
 	public Branch(List<ComponentBranch> data) {
-		topo = new Integer[data.size()][5]; 
-		Integer[][] tmp_topo = new Integer[data.size()][5]; 
+		topo = new Double[data.size()][5]; 
+		Double[][] tmp_topo = new Double[data.size()][5]; 
 		for(int i = 0; i < data.size(); i++) {
 			ComponentBranch tmpObj = data.get(i);
-			tmp_topo[i][0] = tmpObj.getSerial_number();
-			tmp_topo[i][1] = tmpObj.getFirst_node();
-			tmp_topo[i][2] = tmpObj.getLast_node();
-			tmp_topo[i][3] = tmpObj.getType();
-			tmp_topo[i][4] = tmpObj.getRun_state();
+			tmp_topo[i][0] = (double)tmpObj.getSerial_number();
+			tmp_topo[i][1] = (double)tmpObj.getFirst_node();
+			tmp_topo[i][2] = (double)tmpObj.getLast_node();
+			tmp_topo[i][3] = (double)tmpObj.getType();
+			tmp_topo[i][4] = (double)tmpObj.getRun_state();
 		}
 		this.topo = tmp_topo;
 		
@@ -42,11 +42,11 @@ public class Branch {
         }
 	}
 
-	public Integer[][] getTopo() {
+	public Double[][] getTopo() {
 		return topo;
 	}
 
-	public void setTopo(Integer[][] topo) {
+	public void setTopo(Double[][] topo) {
 		this.topo = topo;
 	}
 
@@ -57,6 +57,7 @@ public class Branch {
 	public void setName(MWCellArray name) {
 		this.name = name;
 	}
+
 	
 	/*
 	 * public Branch() { topo = new double[][]{{1, 1, 1, 1}, {2, 1, 1, 1}, {3, 1, 1,
