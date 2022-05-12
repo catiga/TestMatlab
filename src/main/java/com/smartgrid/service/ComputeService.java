@@ -196,8 +196,8 @@ public class ComputeService {
 			//开始处理数据
 			double baseMVA = d1.getDouble();
 			double[][] busArray = (double[][])d2.toDoubleArray();
-			double[][] branchArray = (double[][])d3.toDoubleArray();
-			double[][] genArray = (double[][])d4.toDoubleArray();
+			double[][] genArray = (double[][])d3.toDoubleArray();
+			double[][] branchArray = (double[][])d4.toDoubleArray();
 			int success = d5.getInt();
 			double et = d6.getDouble();
 			
