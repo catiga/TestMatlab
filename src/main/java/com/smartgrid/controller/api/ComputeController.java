@@ -143,6 +143,10 @@ public class ComputeController extends WrapperController {
 		if(sBase==null) {
 			return ProtObj.fail(405, "project params not set");
 		}
+		//变更计算状态
+		task.setComputing(1);
+		computeService.updatePfTask(task);
+		
 		ProtObj ret = computeService.computePf(task, sBase);
 		
 		CpfComputeResult realData = null;
