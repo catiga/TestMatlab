@@ -77,6 +77,11 @@ public class ComputeService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
+	public void updatePfTask(TaskLoadFlow task) {
+		loadFlowDao.save(task);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) {
 		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
 		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(task.getProjId());
@@ -228,9 +233,13 @@ public class ComputeService {
 			pfResultDao.deleteByTaskId(task.getId());
 			pfResultDao.save(compute);
 			
+			task.setComputing(2);
+			loadFlowDao.save(task);
 			return ProtObj.success(compute);
 		} catch(MWException mex) {
 			mex.printStackTrace();
+			task.setComputing(3);
+			loadFlowDao.save(task);
 			return ProtObj.fail(501, mex.toString());
 		}
 	}
