@@ -104,111 +104,114 @@ public class ComputeService {
 	}
 	
 	public ProtObj computeTopo(TaskStationTopo task) {
-		List<C1TableNodeLevelProvince> tableNodeData = tableNodeLevelProvinceDao.findByProjId(task.getProjId());
-		List<C1BusLevel> busLevelData = busLevelDao.findByProjId(task.getProjId());
-		List<C1GeneratorLevel> generatorLevelData = generatorLevelDao.findByProjId(task.getProjId());
-		List<C1BranchLevel> branchLevelData = branchLevelDao.findByProjId(task.getProjId());
-		
-		if(tableNodeData==null || tableNodeData.isEmpty()) {
-			return ProtObj.fail(403, "TableNode Data empty");//add-LC
-		}
-		if(busLevelData==null || busLevelData.isEmpty()) {
-			return ProtObj.fail(403, "BusLevel Data empty");//add-LC
-		}
-		if(generatorLevelData==null || generatorLevelData.isEmpty()) {
-			return ProtObj.fail(403, "GeneratorLevel Data empty");//add-LC
-		}
-		if(branchLevelData==null || branchLevelData.isEmpty()) {
-			return ProtObj.fail(403, "BranchLevel Data empty");//add-LC
-		}
-		
-		List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
+        
+        //maintance_target
+        List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
 		if(taskData==null || taskData.isEmpty()) {
 			return ProtObj.fail(403, "Task Data empty");//add-LC
 		}
+		String[] miantance_Target = new String[] {taskData.get(0).getStationName()};
+        
+        
+        //bus_level_area、branch_level_area、generator_level_area、table_nodes_level_province
+        List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
+		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(task.getProjId());
+		List<C1GeneratorLevelArea> generatorLevelAreaData = generatorLevelAreaDao.findByProjId(task.getProjId());
+		List<C1TableNodeLevelProvince> tableNodeAreaData = tableNodeLevelProvinceDao.findByProjId(task.getProjId());
 		
-		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
-        if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
-        	return ProtObj.fail(403, "Branch Data empty");
-        }
+		if(busLevelAreaData==null || busLevelAreaData.isEmpty()) {
+			return ProtObj.fail(401, "bus level area data empty");
+		}
+		
+		if(branchLevelAreaData==null || branchLevelAreaData.isEmpty()) {
+			return ProtObj.fail(402, "branch level area data empty");
+		}
+		
+		if(generatorLevelAreaData==null || generatorLevelAreaData.isEmpty()) {
+			return ProtObj.fail(403, "generator level area data empty");
+		}
+		
+		if(tableNodeAreaData==null || tableNodeAreaData.isEmpty()) {
+			return ProtObj.fail(403, "table node level area data empty");
+		}
+		
+		double[][] busLevelArray = new double[busLevelAreaData.size()][13];
+		double[][] branchLevelArray = new double[branchLevelAreaData.size()][13];
+		double[][] generatorLevelArray = new double[generatorLevelAreaData.size()][21];
+		MWCellArray tableNodeArray = new MWCellArray(new int[] {tableNodeAreaData.size(), 3});
+		
+		int index = 0;
+		for(C1BusLevelArea d : busLevelAreaData) {
+			busLevelArray[index][0] = d.getBla1().doubleValue();
+			busLevelArray[index][1] = d.getBla2().doubleValue();
+			busLevelArray[index][2] = d.getBla3().doubleValue();
+			busLevelArray[index][3] = d.getBla4().doubleValue();
+			busLevelArray[index][4] = d.getBla5().doubleValue();
+			busLevelArray[index][5] = d.getBla6().doubleValue();
+			busLevelArray[index][6] = d.getBla7().doubleValue();
+			busLevelArray[index][7] = d.getBla8().doubleValue();
+			busLevelArray[index][8] = d.getBla9().doubleValue();
+			busLevelArray[index][9] = d.getBla10().doubleValue();
+			busLevelArray[index][10] = d.getBla11().doubleValue();
+			busLevelArray[index][11] = d.getBla12().doubleValue();
+			busLevelArray[index][12] = d.getBla13().doubleValue();
+			index++;
+		}
+		index = 0;
+		for(C1BranchLevelArea d : branchLevelAreaData) {
+			branchLevelArray[index][0] = d.getBla1().doubleValue();
+			branchLevelArray[index][1] = d.getBla2().doubleValue();
+			branchLevelArray[index][2] = d.getBla3().doubleValue();
+			branchLevelArray[index][3] = d.getBla4().doubleValue();
+			branchLevelArray[index][4] = d.getBla5().doubleValue();
+			branchLevelArray[index][5] = d.getBla6().doubleValue();
+			branchLevelArray[index][6] = d.getBla7().doubleValue();
+			branchLevelArray[index][7] = d.getBla8().doubleValue();
+			branchLevelArray[index][8] = d.getBla9().doubleValue();
+			branchLevelArray[index][9] = d.getBla10().doubleValue();
+			branchLevelArray[index][10] = d.getBla11().doubleValue();
+			branchLevelArray[index][11] = d.getBla12().doubleValue();
+			branchLevelArray[index][12] = d.getBla13().doubleValue();
+			index++;
+		}
+		index = 0;
+		for(C1GeneratorLevelArea d : generatorLevelAreaData) {
+			generatorLevelArray[index][0] = d.getGla1().doubleValue();
+			generatorLevelArray[index][1] = d.getGla2().doubleValue();
+			generatorLevelArray[index][2] = d.getGla3().doubleValue();
+			generatorLevelArray[index][3] = d.getGla4().doubleValue();
+			generatorLevelArray[index][4] = d.getGla5().doubleValue();
+			generatorLevelArray[index][5] = d.getGla6().doubleValue();
+			generatorLevelArray[index][6] = d.getGla7().doubleValue();
+			generatorLevelArray[index][7] = d.getGla8().doubleValue();
+			generatorLevelArray[index][8] = d.getGla9().doubleValue();
+			generatorLevelArray[index][9] = d.getGla10().doubleValue();
+			generatorLevelArray[index][10] = d.getGla11().doubleValue();
+			generatorLevelArray[index][11] = d.getGla12().doubleValue();
+			generatorLevelArray[index][12] = d.getGla13().doubleValue();
+			generatorLevelArray[index][13] = d.getGla14().doubleValue();
+			generatorLevelArray[index][14] = d.getGla15().doubleValue();
+			generatorLevelArray[index][15] = d.getGla16().doubleValue();
+			generatorLevelArray[index][16] = d.getGla17().doubleValue();
+			generatorLevelArray[index][17] = d.getGla18().doubleValue();
+			generatorLevelArray[index][18] = d.getGla19().doubleValue();
+			generatorLevelArray[index][19] = d.getGla20().doubleValue();
+			generatorLevelArray[index][20] = d.getGla21().doubleValue();
+			index++;
+		}
+		
+		index = 1;
+		for(C1TableNodeLevelProvince d : tableNodeAreaData) {
+			int[] idx1 = new int[] {index, 1};
+			int[] idx2 = new int[] {index, 2};
+			int[] idx3 = new int[] {index, 3};
+			tableNodeArray.set(idx1, d.getV1().doubleValue());
+			tableNodeArray.set(idx2, d.getV2());
+			tableNodeArray.set(idx3, d.getV3().doubleValue());
+			index++;
+		}
         
-        //开始构建输入参数
-        MWCellArray Table_nodes_level_province_area = new MWCellArray(new int[] {tableNodeData.size(), 3});
-        double[][] bus_level = new double[busLevelData.size()][13];
-        double[][] generator_level = new double[generatorLevelData.size()][21];
-        double[][] branch_level = new double[branchLevelData.size()][13];
-        String[] miantance_Target = new String[] {taskData.get(0).getStationName()};
-        
-        for(int i=0; i<tableNodeData.size(); i++) {
-        	int[] idx1 = new int[] {i+1, 1};
-        	int[] idx2 = new int[] {i+1, 2};
-        	int[] idx3 = new int[] {i+1, 3};
-        	Table_nodes_level_province_area.set(idx1, tableNodeData.get(i).getV1().doubleValue());
-        	Table_nodes_level_province_area.set(idx2, tableNodeData.get(i).getV2());
-        	Table_nodes_level_province_area.set(idx3, tableNodeData.get(i).getV3().doubleValue());
-        }
-        
-        for(int i=0; i<busLevelData.size(); i++) {
-        	bus_level[i][0] = busLevelData.get(i).getBl1().doubleValue();
-        	bus_level[i][1] = busLevelData.get(i).getBl2().doubleValue();
-        	bus_level[i][2] = busLevelData.get(i).getBl3().doubleValue();
-        	bus_level[i][3] = busLevelData.get(i).getBl4().doubleValue();
-        	bus_level[i][4] = busLevelData.get(i).getBl5().doubleValue();
-        	bus_level[i][5] = busLevelData.get(i).getBl6().doubleValue();
-        	bus_level[i][6] = busLevelData.get(i).getBl7().doubleValue();
-        	bus_level[i][7] = busLevelData.get(i).getBl8().doubleValue();
-        	bus_level[i][8] = busLevelData.get(i).getBl9().doubleValue();
-        	bus_level[i][9] = busLevelData.get(i).getBl10().doubleValue();
-        	bus_level[i][10] = busLevelData.get(i).getBl11().doubleValue();
-        	bus_level[i][11] = busLevelData.get(i).getBl12().doubleValue();
-        	bus_level[i][12] = busLevelData.get(i).getBl13().doubleValue();
-        }
-        
-        for(int i=0; i<generatorLevelData.size(); i++) {
-        	generator_level[i][0] = generatorLevelData.get(i).getGl1().doubleValue();
-        	generator_level[i][1] = generatorLevelData.get(i).getGl2().doubleValue();
-        	generator_level[i][2] = generatorLevelData.get(i).getGl3().doubleValue();
-        	generator_level[i][3] = generatorLevelData.get(i).getGl4().doubleValue();
-        	generator_level[i][4] = generatorLevelData.get(i).getGl5().doubleValue();
-        	generator_level[i][5] = generatorLevelData.get(i).getGl6().doubleValue();
-        	generator_level[i][6] = generatorLevelData.get(i).getGl7().doubleValue();
-        	generator_level[i][7] = generatorLevelData.get(i).getGl8().doubleValue();
-        	generator_level[i][8] = generatorLevelData.get(i).getGl9().doubleValue();
-        	generator_level[i][9] = generatorLevelData.get(i).getGl10().doubleValue();
-        	generator_level[i][10] = generatorLevelData.get(i).getGl11().doubleValue();
-        	generator_level[i][11] = generatorLevelData.get(i).getGl12().doubleValue();
-        	generator_level[i][12] = generatorLevelData.get(i).getGl13().doubleValue();
-        	generator_level[i][13] = generatorLevelData.get(i).getGl14().doubleValue();
-        	generator_level[i][14] = generatorLevelData.get(i).getGl15().doubleValue();
-        	generator_level[i][15] = generatorLevelData.get(i).getGl16().doubleValue();
-        	generator_level[i][16] = generatorLevelData.get(i).getGl17().doubleValue();
-        	generator_level[i][17] = generatorLevelData.get(i).getGl18().doubleValue();
-        	generator_level[i][18] = generatorLevelData.get(i).getGl19().doubleValue();
-        	generator_level[i][19] = generatorLevelData.get(i).getGl20().doubleValue();
-        	generator_level[i][20] = generatorLevelData.get(i).getGl21().doubleValue();
-        }
-        
-        for(int i=0; i<branchLevelData.size(); i++) {
-        	try {
-        	branch_level[i][0] = branchLevelData.get(i).getBl1().doubleValue();
-        	branch_level[i][1] = branchLevelData.get(i).getBl2().doubleValue();
-        	branch_level[i][2] = branchLevelData.get(i).getBl3().doubleValue();
-        	branch_level[i][3] = branchLevelData.get(i).getBl4().doubleValue();
-        	branch_level[i][4] = branchLevelData.get(i).getBl5().doubleValue();
-        	branch_level[i][5] = branchLevelData.get(i).getBl6().doubleValue();
-        	branch_level[i][6] = branchLevelData.get(i).getBl7().doubleValue();
-        	branch_level[i][7] = branchLevelData.get(i).getBl8().doubleValue();
-        	branch_level[i][8] = branchLevelData.get(i).getBl9().doubleValue();
-        	branch_level[i][9] = branchLevelData.get(i).getBl10().doubleValue();
-        	branch_level[i][10] = branchLevelData.get(i).getBl11().doubleValue();
-        	branch_level[i][11] = branchLevelData.get(i).getBl12().doubleValue();
-        	branch_level[i][12] = branchLevelData.get(i).getBl13().doubleValue();
-        	}catch(Exception e) {
-        		e.printStackTrace();
-        	}
-        }
-        
-		// exMatchIn
+        // exMatchIn
 		String nodeListData = task.getNodeList();
 		String[] arrNodeListData = nodeListData.split(";");
 		MWCellArray exMatchIn = new MWCellArray(new int[]{arrNodeListData.length, 2});
@@ -219,6 +222,12 @@ public class ComputeService {
 			exMatchIn.set(idx1, Double.valueOf(oneNode[0]).doubleValue());
 			exMatchIn.set(idx2, oneNode[1]);
 		}
+		
+		//maintance_branch_original
+		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
+        if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
+        	return ProtObj.fail(403, "Branch Data empty");
+        }
 		
 		Branch branch = new Branch(projectComponentBranchData);//add-LC
 		MWStructArray mainwire_original_branch = branch.toM();//add-LC
@@ -233,8 +242,8 @@ public class ComputeService {
 		}
 		
 		try {
-			CalculateTopo topoComputer = new CalculateTopo();//
-			Object [] topoData = topoComputer.CalculteTopo(9, Table_nodes_level_province_area, bus_level, generator_level, branch_level, miantance_Target, exMatchIn, mainwire_original_branch, Table_mainwire_maintance_elements);//add-LC
+			CalculateTopo topoComputer = new CalculateTopo();
+			Object [] topoData = topoComputer.CalculteTopo(9, tableNodeArray, busLevelArray, generatorLevelArray,branchLevelArray, miantance_Target, exMatchIn, mainwire_original_branch, Table_mainwire_maintance_elements);
 			
 			MWNumericArray t1 = (MWNumericArray)topoData[0];
 			MWNumericArray t2 = (MWNumericArray)topoData[1];
@@ -244,7 +253,7 @@ public class ComputeService {
 			MWNumericArray t6 = (MWNumericArray)topoData[5];
 			MWNumericArray t7 = (MWNumericArray)topoData[6];
 			MWNumericArray t8 = (MWNumericArray)topoData[7];
-			MWCellArray t9 = (MWCellArray)topoData[8];// add LC
+			MWCellArray t9 = (MWCellArray)topoData[8];
 			
 			return ProtObj.success(1);
 		} catch(MWException mex) {
