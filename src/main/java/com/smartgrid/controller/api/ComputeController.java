@@ -119,11 +119,52 @@ public class ComputeController extends WrapperController {
 	 * 潮流计算
 	 * @param proj_id
 	 * @return
-	 * @throws Exception //aa LC
 	 */
 	@ResponseBody
-	@RequestMapping("/api/tide/compute/{task_id}")
-	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) throws Exception {
+	@RequestMapping("/api/tide/compute/pf/{task_id}")
+	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) {
+		TaskLoadFlow task = computeService.getPfTask(task_id);
+		if(task==null) {
+			return ProtObj.fail(404, "task not found");
+		}
+		
+		//查询数据
+		List<ProjectParam> projectParams = sysService.findProjectParams(task.getProjId());
+		//获取sbase
+		BigDecimal sBase = null;
+		if(projectParams!=null) {
+			for(ProjectParam pp : projectParams) {
+				if(pp.getParamK().equals("bench_value")) {
+					sBase = pp.getParamV(); break;
+				}
+			}
+		}
+		if(sBase==null) {
+			return ProtObj.fail(405, "project params not set");
+		}
+		//变更计算状态
+		task.setComputing(1);
+		computeService.updatePfTask(task);
+		
+		ProtObj ret = computeService.computePf(task, sBase);
+		
+		CpfComputeResult realData = null;
+		if(ret.getErrno()!=0) {
+			return ret;
+		}
+		if(ret.getData()!=null) {
+			realData = (CpfComputeResult)ret.getData();
+		}
+		if(realData==null) {
+			return ProtObj.fail(900, "compute failed");
+		}
+		
+		return ret;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/api/tide/compute/topo/{task_id}")
+	public ProtObj topo_compute(@PathVariable(name="task_id") Long task_id) {
 		TaskLoadFlow task = computeService.getPfTask(task_id);
 		if(task==null) {
 			return ProtObj.fail(404, "task not found");

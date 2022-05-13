@@ -12,14 +12,8 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.C1BranchLevelAreaDao;
-import com.smartgrid.dao.C1BranchLevelDao;
 import com.smartgrid.dao.C1BusLevelAreaDao;
-import com.smartgrid.dao.C1BusLevelDao;
-import com.smartgrid.dao.C1ComponentRelibilityDao;
 import com.smartgrid.dao.C1GeneratorLevelAreaDao;
-import com.smartgrid.dao.C1GeneratorLevelDao;
-import com.smartgrid.dao.C1LoadLevelDao;
-import com.smartgrid.dao.C1NameShowLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
@@ -41,39 +35,33 @@ import com.smartgrid.util.ToolKit;
 
 import calculatePf.CalculatePf;
 
-
 @Service
 public class ComputeService {
 
-	@Autowired
-	private C1BusLevelDao busLevelDao;
-	
-	@Autowired
-	private C1BusLevelAreaDao busLevelAreaDao;
-	
-	@Autowired
-	private C1BranchLevelDao branchLevelDao;
-	
+//	@Autowired
+//	private C1BusLevelDao busLevelDao;
+//	@Autowired
+//	private C1BranchLevelDao branchLevelDao;
+//	@Autowired
+//	private C1GeneratorLevelDao generatorLevelDao;
+//	@Autowired
+//	private C1NameShowLevelDao nameShowLevelDao;
+//	@Autowired
+//	private C1LoadLevelDao loadLevelDao;
+//	@Autowired
+//	private C1ComponentRelibilityDao componentRelibilityDao;
+
 	@Autowired
 	private C1BranchLevelAreaDao branchLevelAreaDao;
-	
-	@Autowired
-	private C1GeneratorLevelDao generatorLevelDao;
-	
-	@Autowired
-	private C1GeneratorLevelAreaDao generatorLevelAreaDao;
-	
-	@Autowired
-	private C1NameShowLevelDao nameShowLevelDao;
-	
-	@Autowired
-	private C1LoadLevelDao loadLevelDao;
 	
 	@Autowired
 	private C1TableNodeLevelProvinceDao tableNodeLevelProvinceDao;
 	
 	@Autowired
-	private C1ComponentRelibilityDao componentRelibilityDao;
+	private C1BusLevelAreaDao busLevelAreaDao;
+	
+	@Autowired
+	private C1GeneratorLevelAreaDao generatorLevelAreaDao;
 	
 	@Autowired
 	private CpfComputeResultDao pfResultDao;
@@ -90,11 +78,20 @@ public class ComputeService {
 	@Autowired
 	private RepaireTaskDao taskDao;//add-LC
 	
+	public TaskStationTopo getTopoTask(Long id) {
+		return topoDao.getOne(id);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void updateTopoTask(TaskStationTopo task) {
+		topoDao.save(task);
+	}
 
 	public TaskLoadFlow getPfTask(Long id) {
 		return loadFlowDao.getOne(id);
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public void updatePfTask(TaskLoadFlow task) {
 		loadFlowDao.save(task);
 	}
@@ -175,7 +172,7 @@ public class ComputeService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) throws Exception {//add-LC
+	public ProtObj computePf(TaskLoadFlow task, BigDecimal sBase) {
 		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
 		List<C1BranchLevelArea> branchLevelAreaData = branchLevelAreaDao.findByProjId(task.getProjId());
 		List<C1GeneratorLevelArea> generatorLevelAreaData = generatorLevelAreaDao.findByProjId(task.getProjId());
