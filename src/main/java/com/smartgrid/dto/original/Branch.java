@@ -12,8 +12,12 @@ public class Branch {
 	
 	MWCellArray name;
 	
-	public MWStructArray toM() throws Exception {
-        return MWStructArray.fromBean(this);
+	public MWStructArray toM() {
+		try {
+			return MWStructArray.fromBean(this);
+		}catch(Exception e) {
+			throw new RuntimeException(e);
+		}
     }
 	
 	public Branch(List<ComponentBranch> data) {

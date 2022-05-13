@@ -15,10 +15,12 @@ import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.controller.api.wrapper.WrapperController;
 import com.smartgrid.dao.RepaireTaskDao;
+import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.ProjectParam;
 import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.entity.TaskLoadFlow;
+import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.C1Service;
 import com.smartgrid.service.ComputeService;
@@ -163,39 +165,29 @@ public class ComputeController extends WrapperController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/api/tide/compute/topo/{task_id}")
+	@RequestMapping("/api/task/compute/topo/{task_id}")
 	public ProtObj topo_compute(@PathVariable(name="task_id") Long task_id) {
-		TaskLoadFlow task = computeService.getPfTask(task_id);
+		TaskStationTopo task = computeService.getTopoTask(task_id);
 		if(task==null) {
 			return ProtObj.fail(404, "task not found");
 		}
 		
-		//查询数据
-		List<ProjectParam> projectParams = sysService.findProjectParams(task.getProjId());
-		//获取sbase
-		BigDecimal sBase = null;
-		if(projectParams!=null) {
-			for(ProjectParam pp : projectParams) {
-				if(pp.getParamK().equals("bench_value")) {
-					sBase = pp.getParamV(); break;
-				}
-			}
-		}
-		if(sBase==null) {
-			return ProtObj.fail(405, "project params not set");
+		//检查基础数据
+		if(task.getTopoList()==null || task.getNodeList()==null) {
+			return ProtObj.fail(405, "topo or node data empty");
 		}
 		//变更计算状态
 		task.setComputing(1);
-		computeService.updatePfTask(task);
+		computeService.updateTopoTask(task);
 		
-		ProtObj ret = computeService.computePf(task, sBase);
+		ProtObj ret = computeService.computeTopo(task);
 		
-		CpfComputeResult realData = null;
+		CTopoComputeResult realData = null;
 		if(ret.getErrno()!=0) {
 			return ret;
 		}
 		if(ret.getData()!=null) {
-			realData = (CpfComputeResult)ret.getData();
+			realData = (CTopoComputeResult)ret.getData();
 		}
 		if(realData==null) {
 			return ProtObj.fail(900, "compute failed");

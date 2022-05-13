@@ -1,5 +1,7 @@
 package com.smartgrid.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,4 +14,7 @@ public interface C1GeneratorLevelDao extends JpaRepository<C1GeneratorLevel, Lon
 	@Modifying
 	@Query(value = "delete from C1GeneratorLevel s where s.projId=:projId")
 	public void deleteByProjId(@Param(value = "projId") Long projId);
+	
+	public List<C1GeneratorLevel> findByProjId(Long projId);
+	
 }

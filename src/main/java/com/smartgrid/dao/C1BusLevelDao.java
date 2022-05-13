@@ -1,5 +1,7 @@
 package com.smartgrid.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,4 +14,7 @@ public interface C1BusLevelDao extends JpaRepository<C1BusLevel, Long> {
 	@Modifying
 	@Query(value = "delete from C1BusLevel s where s.projId=:projId")
 	public void deleteByProjId(@Param(value = "projId") Long projId);
+	
+	public List<C1BusLevel> findByProjId(Long projId);
+	
 }

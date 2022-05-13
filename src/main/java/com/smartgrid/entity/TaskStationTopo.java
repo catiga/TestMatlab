@@ -34,8 +34,8 @@ public class TaskStationTopo implements Serializable {
 	
 	private Integer computing;
 	
-	@Column(name = "todo_list")
-	private String todoList;
+	@Column(name = "topo_list")
+	private String topoList;
 	
 	@Column(name = "node_list")
 	private String nodeList;
@@ -96,12 +96,12 @@ public class TaskStationTopo implements Serializable {
 		this.computing = computing;
 	}
 
-	public String getTodoList() {
-		return todoList;
+	public String getTopoList() {
+		return topoList;
 	}
 
-	public void setTodoList(String todoList) {
-		this.todoList = todoList;
+	public void setTopoList(String topoList) {
+		this.topoList = topoList;
 	}
 
 	public String getNodeList() {

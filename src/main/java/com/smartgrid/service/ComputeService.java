@@ -12,8 +12,11 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.C1BranchLevelAreaDao;
+import com.smartgrid.dao.C1BranchLevelDao;
 import com.smartgrid.dao.C1BusLevelAreaDao;
+import com.smartgrid.dao.C1BusLevelDao;
 import com.smartgrid.dao.C1GeneratorLevelAreaDao;
+import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
@@ -21,8 +24,11 @@ import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dao.TaskLoadFlowDao;
 import com.smartgrid.dao.TaskStationTopoDao;
 import com.smartgrid.dto.original.Branch;
+import com.smartgrid.entity.C1BranchLevel;
 import com.smartgrid.entity.C1BranchLevelArea;
+import com.smartgrid.entity.C1BusLevel;
 import com.smartgrid.entity.C1BusLevelArea;
+import com.smartgrid.entity.C1GeneratorLevel;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
 import com.smartgrid.entity.ComponentBranch;//add-LC
@@ -33,17 +39,18 @@ import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.ToolKit;
 
+import CalculteTopo.CalculateTopo;
 import calculatePf.CalculatePf;
 
 @Service
 public class ComputeService {
 
-//	@Autowired
-//	private C1BusLevelDao busLevelDao;
-//	@Autowired
-//	private C1BranchLevelDao branchLevelDao;
-//	@Autowired
-//	private C1GeneratorLevelDao generatorLevelDao;
+	@Autowired
+	private C1BusLevelDao busLevelDao;
+	@Autowired
+	private C1BranchLevelDao branchLevelDao;
+	@Autowired
+	private C1GeneratorLevelDao generatorLevelDao;
 //	@Autowired
 //	private C1NameShowLevelDao nameShowLevelDao;
 //	@Autowired
@@ -96,79 +103,87 @@ public class ComputeService {
 		loadFlowDao.save(task);
 	}
 	
-	public ProtObj computeTopo(TaskStationTopo task) throws Exception {
-		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
-        List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
-        
-        if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
-			return ProtObj.fail(403, "Component Branch Data empty");//add-LC
+	public ProtObj computeTopo(TaskStationTopo task) {
+		List<C1TableNodeLevelProvince> tableNodeData = tableNodeLevelProvinceDao.findByProjId(task.getProjId());
+		List<C1BusLevel> busLevelData = busLevelDao.findByProjId(task.getProjId());
+		List<C1GeneratorLevel> generatorLevelData = generatorLevelDao.findByProjId(task.getProjId());
+		List<C1BranchLevel> branchLevelData = branchLevelDao.findByProjId(task.getProjId());
+		
+		if(tableNodeData==null || tableNodeData.isEmpty()) {
+			return ProtObj.fail(403, "TableNode Data empty");//add-LC
 		}
-		if(taskData==null || taskData.isEmpty()) {
-			return ProtObj.fail(403, "Task Data");//add-LC
+		if(busLevelData==null || busLevelData.isEmpty()) {
+			return ProtObj.fail(403, "BusLevel Data empty");//add-LC
+		}
+		if(generatorLevelData==null || generatorLevelData.isEmpty()) {
+			return ProtObj.fail(403, "GeneratorLevel Data empty");//add-LC
+		}
+		if(branchLevelData==null || branchLevelData.isEmpty()) {
+			return ProtObj.fail(403, "BranchLevel Data empty");//add-LC
 		}
 		
-		//add-LC- build the data structure of exMatchIn and TableMainwireElements
+		List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
+		if(taskData==null || taskData.isEmpty()) {
+			return ProtObj.fail(403, "Task Data empty");//add-LC
+		}
+		
+		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
+        if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
+        	return ProtObj.fail(403, "Branch Data empty");
+        }
+        
+        //开始构建输入参数
+        MWCellArray Table_nodes_level_province_area = new MWCellArray(new int[] {tableNodeData.size(), 3});
+        double[][] bus_level = new double[busLevelData.size()][13];
+        double[][] generator_level = new double[generatorLevelData.size()][13];
+        double[][] branch_level = new double[generatorLevelData.size()][13];
+        String[] miantance_Target = new String[] {taskData.get(0).getStationName()};
+        
+		// exMatchIn
+		String nodeListData = task.getNodeList();
+		String[] arrNodeListData = nodeListData.split(";");
+		MWCellArray exMatchIn = new MWCellArray(new int[]{arrNodeListData.length, 2});
+		for(int i=0; i<arrNodeListData.length; i++) {
+			String[] oneNode = arrNodeListData[i].split(",");
+			int[] idx1 = new int[] {i+1, 1};
+			int[] idx2 = new int[] {i+1, 2};
+			exMatchIn.set(idx1, Double.valueOf(oneNode[0]).doubleValue());
+			exMatchIn.set(idx2, oneNode[1]);
+		}
 		
 		Branch branch = new Branch(projectComponentBranchData);//add-LC
-		MWStructArray original = branch.toM();//add-LC
+		MWStructArray mainwire_original_branch = branch.toM();//add-LC
 		
-		
-		RepaireTask taskdata = taskData.get(0);//add-LC
-		String[] maintanceTarget = new String[] {taskdata.getStationName()};//add-LC
-		
-		double[][]tmp_exMatchIn_num = new double[12][1];
-		for(int i = 0; i<tmp_exMatchIn_num.length; i++) {
-			tmp_exMatchIn_num[i][0] = i+1.0;
-		}
-		tmp_exMatchIn_num[10][0] = 44.0;
-		tmp_exMatchIn_num[11][0] = 48.0;
-		String[][]tmp_exMatchIn_str = {
-				{"鄂府河220"},{"鄂府河220"},{"鄂临空港220"},{"鄂环城220"},{"鄂环城220"},
-				{"鄂李家墩220"},{"鄂李家墩220"},{"鄂德胜堂220-2"},{"鄂江滩220"},{"鄂岱家山220"},
-				{"鄂木兰1B220"},{"鄂木兰2B220"}
-		};
-		
-		MWCellArray exMatchIn = new MWCellArray(new int[]{tmp_exMatchIn_num.length, 2});
-		int j = 1;
-		int k = 1;
-		for(int i = 0; i<tmp_exMatchIn_num.length; i++) {
-			int[] idx1 = new int[] {j++, 1};
-			int[] idx2 = new int[] {k++, 2};
-			exMatchIn.set(idx1, tmp_exMatchIn_num[i][0]);
-			exMatchIn.set(idx2, tmp_exMatchIn_str[i][0]);
+		//Table_mainwire_maintance_elements
+		String topoListData = task.getTopoList();
+		String[] arrTopoListData = topoListData.split(";");
+		MWCellArray Table_mainwire_maintance_elements = new MWCellArray(new int[] {arrTopoListData.length, 1});
+		for(int i=0; i<arrTopoListData.length; i++) {
+			int[] idx = new int[] {i+1, 1};
+			Table_mainwire_maintance_elements.set(idx, arrTopoListData[i]);
 		}
 		
-		String[]tmp_TableMainwireElements = {
-				"S1-1","进线B1","S1-2","S1-3",
-				"S2-1","进线B2","S2-2","S2-3",
-				"S3-1","进线B3","S3-2","S3-3",
-				"S4-1","进线B4","S4-2","S4-3"
-		};
-		MWCellArray TableMainwireElements = new MWCellArray(new int[]{tmp_TableMainwireElements.length, 1});
-		int i = 1;
-		for(String t : tmp_TableMainwireElements) {
-			int[] idx = new int[] {i++, 1};
-			TableMainwireElements.set(idx, t);
+		try {
+			CalculateTopo topoComputer = new CalculateTopo();//
+			Object [] topoData = topoComputer.CalculteTopo(9, Table_nodes_level_province_area, bus_level, generator_level, branch_level, miantance_Target, exMatchIn, mainwire_original_branch, Table_mainwire_maintance_elements);//add-LC
+			
+			MWNumericArray t1 = (MWNumericArray)topoData[0];
+			MWNumericArray t2 = (MWNumericArray)topoData[1];
+			MWNumericArray t3 = (MWNumericArray)topoData[2];
+			MWNumericArray t4 = (MWNumericArray)topoData[3];
+			MWNumericArray t5 = (MWNumericArray)topoData[4];
+			MWNumericArray t6 = (MWNumericArray)topoData[5];
+			MWNumericArray t7 = (MWNumericArray)topoData[6];
+			MWNumericArray t8 = (MWNumericArray)topoData[7];
+			MWCellArray t9 = (MWCellArray)topoData[8];// add LC
+			
+			return ProtObj.success(1);
+		} catch(MWException mex) {
+			mex.printStackTrace();
+			task.setComputing(3);
+			topoDao.save(task);
+			return ProtObj.fail(501, mex.toString());
 		}
-		//add-LC
-		
-//		CalculateTopo topoComputer = new CalculateTopo();//
-//		Object [] topoData = topoComputer.CalculteTopo(9, tableNodeArray, busLevelArray, generatorLevelArray, branchLevelArray, maintanceTarget,exMatchIn ,original,TableMainwireElements);//add-LC
-//		
-//		//add LC-处理数据
-//		MWNumericArray t1 = (MWNumericArray)topoData[0];
-//		MWNumericArray t2 = (MWNumericArray)topoData[1];
-//		MWNumericArray t3 = (MWNumericArray)topoData[2];
-//		MWNumericArray t4 = (MWNumericArray)topoData[3];
-//		MWNumericArray t5 = (MWNumericArray)topoData[4];
-//		MWNumericArray t6 = (MWNumericArray)topoData[5];
-//		MWNumericArray t7 = (MWNumericArray)topoData[6];
-//		MWNumericArray t8 = (MWNumericArray)topoData[7];
-//		
-//		MWCellArray t9 = (MWCellArray)realData[8];// add LC
-		
-		return null;
-		
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
