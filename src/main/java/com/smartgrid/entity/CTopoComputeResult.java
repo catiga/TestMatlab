@@ -1,7 +1,6 @@
 package com.smartgrid.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,30 +24,32 @@ public class CTopoComputeResult implements Serializable {
 	@Column(name = "task_id")
 	private Long taskId;
 	
-	@Column(name = "base_mva")
-	private BigDecimal baseMva;
+	@Column(name = "nodes_type")
+	private String nodesType;
 	
-	private String bus;
+	@Column(name = "bus_maintance_sets_3d")
+	private String busMaintanceSets3d;
 	
-	private String branch;
+	@Column(name = "branch_maintance_sets_3d")
+	private String branchMaintanceSets3d;
 	
-	private String gen;
+	@Column(name = "gen_maintance_sets_3d")
+	private String genMaintanceSets3d;
 	
-	private Integer success;
+	@Column(name = "branch_type")
+	private String branchType;
 	
-	private BigDecimal et;
+	@Column(name = "branch_numbers")
+	private Integer branchNumbers;
 	
-	@Column(name = "bus_name")
-	private String busName;
+	@Column(name = "num_topo_maintance")
+	private Integer numTopoMaintance;
 	
-	@Column(name = "branch_fname")
-	private String branchFname;
+	@Column(name = "flag_connect")
+	private Integer flagConnect;
 	
-	@Column(name = "branch_tname")
-	private String branchTname;
-	
-	@Column(name = "gen_name")
-	private String genName;
+	@Column(name = "case_output")
+	private String caseOutput;
 
 	public Long getId() {
 		return id;
@@ -74,84 +75,76 @@ public class CTopoComputeResult implements Serializable {
 		this.taskId = taskId;
 	}
 
-	public BigDecimal getBaseMva() {
-		return baseMva;
+	public String getNodesType() {
+		return nodesType;
 	}
 
-	public void setBaseMva(BigDecimal baseMva) {
-		this.baseMva = baseMva;
+	public void setNodesType(String nodesType) {
+		this.nodesType = nodesType;
 	}
 
-	public String getBus() {
-		return bus;
+	public String getBusMaintanceSets3d() {
+		return busMaintanceSets3d;
 	}
 
-	public void setBus(String bus) {
-		this.bus = bus;
+	public void setBusMaintanceSets3d(String busMaintanceSets3d) {
+		this.busMaintanceSets3d = busMaintanceSets3d;
 	}
 
-	public String getBranch() {
-		return branch;
+	public String getBranchMaintanceSets3d() {
+		return branchMaintanceSets3d;
 	}
 
-	public void setBranch(String branch) {
-		this.branch = branch;
+	public void setBranchMaintanceSets3d(String branchMaintanceSets3d) {
+		this.branchMaintanceSets3d = branchMaintanceSets3d;
 	}
 
-	public String getGen() {
-		return gen;
+	public String getGenMaintanceSets3d() {
+		return genMaintanceSets3d;
 	}
 
-	public void setGen(String gen) {
-		this.gen = gen;
+	public void setGenMaintanceSets3d(String genMaintanceSets3d) {
+		this.genMaintanceSets3d = genMaintanceSets3d;
 	}
 
-	public Integer getSuccess() {
-		return success;
+	public String getBranchType() {
+		return branchType;
 	}
 
-	public void setSuccess(Integer success) {
-		this.success = success;
+	public void setBranchType(String branchType) {
+		this.branchType = branchType;
 	}
 
-	public BigDecimal getEt() {
-		return et;
+	public Integer getBranchNumbers() {
+		return branchNumbers;
 	}
 
-	public void setEt(BigDecimal et) {
-		this.et = et;
+	public void setBranchNumbers(Integer branchNumbers) {
+		this.branchNumbers = branchNumbers;
 	}
 
-	public String getBusName() {
-		return busName;
+	public Integer getNumTopoMaintance() {
+		return numTopoMaintance;
 	}
 
-	public void setBusName(String busName) {
-		this.busName = busName;
+	public void setNumTopoMaintance(Integer numTopoMaintance) {
+		this.numTopoMaintance = numTopoMaintance;
 	}
 
-	public String getBranchFname() {
-		return branchFname;
+	public Integer getFlagConnect() {
+		return flagConnect;
 	}
 
-	public void setBranchFname(String branchFname) {
-		this.branchFname = branchFname;
+	public void setFlagConnect(Integer flagConnect) {
+		this.flagConnect = flagConnect;
 	}
 
-	public String getBranchTname() {
-		return branchTname;
+	public String getCaseOutput() {
+		return caseOutput;
 	}
 
-	public void setBranchTname(String branchTname) {
-		this.branchTname = branchTname;
-	}
-
-	public String getGenName() {
-		return genName;
-	}
-
-	public void setGenName(String genName) {
-		this.genName = genName;
+	public void setCaseOutput(String caseOutput) {
+		this.caseOutput = caseOutput;
 	}
 	
 }

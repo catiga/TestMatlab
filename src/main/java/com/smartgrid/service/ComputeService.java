@@ -31,6 +31,7 @@ import com.smartgrid.entity.C1BusLevelArea;
 import com.smartgrid.entity.C1GeneratorLevel;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
+import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.ComponentBranch;//add-LC
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.RepaireTask;//add-LC
@@ -103,9 +104,8 @@ public class ComputeService {
 		loadFlowDao.save(task);
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computeTopo(TaskStationTopo task) {
-        
-        //maintance_target
         List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
 		if(taskData==null || taskData.isEmpty()) {
 			return ProtObj.fail(403, "Task Data empty");//add-LC
@@ -254,6 +254,18 @@ public class ComputeService {
 			MWNumericArray t7 = (MWNumericArray)topoData[6];
 			MWNumericArray t8 = (MWNumericArray)topoData[7];
 			MWCellArray t9 = (MWCellArray)topoData[8];
+			
+			int[][] nodes_type = (int[][])t1.toIntArray();
+			double[][][] bus_maintance_sets_3D = (double[][][])t2.toDoubleArray();
+			double[][][] branch_maintance_sets_3D = (double[][][])t3.toDoubleArray();
+			double[][][] gen_maintance_sets_3D = (double[][][])t4.toDoubleArray();
+			int[][] branch_Type = (int[][])t5.toIntArray();
+			int branch_numbers = t6.getInt();
+			int num_topo_maintance = t7.getInt();
+			int flag_connect = t8.getInt();
+			MWCellArray caseOutput = t9;
+			
+			CTopoComputeResult result = new CTopoComputeResult();
 			
 			return ProtObj.success(1);
 		} catch(MWException mex) {

@@ -4,6 +4,21 @@ import com.mathworks.toolbox.javabuilder.MWArray;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 
 public class ToolKit {
+	
+	public static String intArrayToString(int[][] data) {
+		StringBuilder buffer = new StringBuilder();
+		if(data!=null && data.length>0) {
+			for(int[] row : data) {
+				StringBuilder r = new StringBuilder();
+				for(double col : row) {
+					r.append(col + ",");
+				}
+				buffer.append(r.substring(0, r.length() - 1) + ";");
+			}
+		}
+		
+		return buffer.substring(0, buffer.length() - 1);
+	}
 
 	public static String doubleArrayToString(double[][] data) {
 		StringBuilder buffer = new StringBuilder();
