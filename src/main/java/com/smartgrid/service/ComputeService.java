@@ -18,6 +18,7 @@ import com.smartgrid.dao.C1BusLevelDao;
 import com.smartgrid.dao.C1GeneratorLevelAreaDao;
 import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
+import com.smartgrid.dao.CTopoComputeResultDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
 import com.smartgrid.dao.RepaireTaskDao;
@@ -85,6 +86,9 @@ public class ComputeService {
 	
 	@Autowired
 	private RepaireTaskDao taskDao;//add-LC
+	
+	@Autowired
+	private CTopoComputeResultDao topoResultDao;
 	
 	public TaskStationTopo getTopoTask(Long id) {
 		return topoDao.getOne(id);
@@ -265,9 +269,43 @@ public class ComputeService {
 			int flag_connect = t8.getInt();
 			MWCellArray caseOutput = t9;
 			
-			CTopoComputeResult result = new CTopoComputeResult();
+			StringBuilder nodesTypeStr = new StringBuilder();
+			ToolKit.objectArrayToString(nodesTypeStr, 2, ToolKit.converArrayObject(nodes_type), 2);
 			
-			return ProtObj.success(1);
+			StringBuilder bus_maintance_sets_3DStr = new StringBuilder();
+			ToolKit.objectArrayToString(bus_maintance_sets_3DStr, 3, ToolKit.converArrayObject(bus_maintance_sets_3D), 3);
+			
+			StringBuilder branch_maintance_sets_3DStr = new StringBuilder();
+			ToolKit.objectArrayToString(branch_maintance_sets_3DStr, 3, ToolKit.converArrayObject(branch_maintance_sets_3D), 3);
+			
+			StringBuilder gen_maintance_sets_3DStr = new StringBuilder();
+			ToolKit.objectArrayToString(gen_maintance_sets_3DStr, 3, ToolKit.converArrayObject(gen_maintance_sets_3D), 3);
+			
+			StringBuilder branch_TypeStr = new StringBuilder();
+			ToolKit.objectArrayToString(branch_TypeStr, 2, ToolKit.converArrayObject(branch_Type), 2);
+			
+			String caseOutputStr = ToolKit.cellArrayToString3(caseOutput);
+			
+			CTopoComputeResult result = new CTopoComputeResult();
+			result.setBranchMaintanceSets3d(branch_maintance_sets_3DStr.toString());
+			result.setBranchNumbers(branch_numbers);
+			result.setBranchType(branch_TypeStr.toString());
+			result.setBusMaintanceSets3d(bus_maintance_sets_3DStr.toString());
+			result.setFlagConnect(flag_connect);
+			result.setGenMaintanceSets3d(gen_maintance_sets_3DStr.toString());
+			result.setNodesType(nodesTypeStr.toString());
+			result.setNumTopoMaintance(num_topo_maintance);
+			result.setProjId(task.getProjId());
+			result.setTaskId(task.getId());
+			result.setCaseOutput(caseOutputStr);
+			
+			topoResultDao.deleteByTaskId(task.getId());
+			topoResultDao.save(result);
+			
+			task.setComputing(2);
+			topoDao.save(task);
+			
+			return ProtObj.success(result);
 		} catch(MWException mex) {
 			mex.printStackTrace();
 			task.setComputing(3);
@@ -402,9 +440,21 @@ public class ComputeService {
 			double et = d6.getDouble();
 			
 			//处理剩余四个
-			String busStr = ToolKit.doubleArrayToString(busArray);
-			String branchStr = ToolKit.doubleArrayToString(branchArray);
-			String genStr = ToolKit.doubleArrayToString(genArray);
+//			String busStr = ToolKit.doubleArrayToString(busArray);
+//			String branchStr = ToolKit.doubleArrayToString(branchArray);
+//			String genStr = ToolKit.doubleArrayToString(genArray);
+			
+			StringBuilder busStrBuilder = new StringBuilder();
+			ToolKit.objectArrayToString(busStrBuilder, 2, ToolKit.converArrayObject(busArray), 2);
+			String busStr = busStrBuilder.toString();
+			
+			StringBuilder branchStrBuilder = new StringBuilder();
+			ToolKit.objectArrayToString(branchStrBuilder, 2, ToolKit.converArrayObject(branchArray), 2);
+			String branchStr = branchStrBuilder.toString();
+			
+			StringBuilder genStrBuilder = new StringBuilder();
+			ToolKit.objectArrayToString(genStrBuilder, 2, ToolKit.converArrayObject(genArray), 2);
+			String genStr = genStrBuilder.toString();
 			
 			String busNameStr = ToolKit.cellArrayToString(d7);
 			String branchFnameStr = ToolKit.cellArrayToString(d8);

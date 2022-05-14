@@ -31,6 +31,8 @@ public class C1LoadLevel implements Serializable {
 	@Column(name = "proj_id")
 	private Long projId;
 	
+	public C1LoadLevel() {}
+	
 	public C1LoadLevel(double[] _13data, Long projId) {
 		if(_13data.length==3) {
 			this.lla1 = new BigDecimal(_13data[0]);

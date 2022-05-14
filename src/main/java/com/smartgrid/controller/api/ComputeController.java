@@ -123,7 +123,7 @@ public class ComputeController extends WrapperController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/api/tide/compute/pf/{task_id}")
+	@RequestMapping("/api/task/compute/pf/{task_id}")
 	public ProtObj tide_compute(@PathVariable(name="task_id") Long task_id) {
 		TaskLoadFlow task = computeService.getPfTask(task_id);
 		if(task==null) {

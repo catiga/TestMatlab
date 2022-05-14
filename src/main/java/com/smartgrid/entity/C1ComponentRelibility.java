@@ -28,6 +28,8 @@ public class C1ComponentRelibility implements Serializable {
 	@Column(name = "proj_id")
 	private Long projId;
 	
+	public C1ComponentRelibility() {}
+	
 	public C1ComponentRelibility(double[] _13data, Long projId) {
 		if(_13data.length==2) {
 			this.cr1 = new BigDecimal(_13data[0]);
