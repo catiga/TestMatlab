@@ -5,10 +5,6 @@ import com.mathworks.toolbox.javabuilder.MWCellArray;
 
 public class ToolKit {
 	
-	private static final String _1level_ = ",";
-	private static final String _2level_ = ";";
-	private static final String _3level_ = "|";
-	
 	private static final String[] _dimentag_ = new String[] {",", ";", "|"};	//代表最多维度支持层数
 	
 	public static void main(String[] argc) {
