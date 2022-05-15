@@ -20,6 +20,7 @@ import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.ProjectParam;
 import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.entity.TaskLoadFlow;
+import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.C1Service;
@@ -181,6 +182,38 @@ public class ComputeController extends WrapperController {
 		computeService.updateTopoTask(task);
 		
 		ProtObj ret = computeService.computeTopo(task);
+		
+		CTopoComputeResult realData = null;
+		if(ret.getErrno()!=0) {
+			return ret;
+		}
+		if(ret.getData()!=null) {
+			realData = (CTopoComputeResult)ret.getData();
+		}
+		if(realData==null) {
+			return ProtObj.fail(900, "compute failed");
+		}
+		
+		return ret;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/api/task/compute/risk/{task_id}")
+	public ProtObj risk_compute(@PathVariable(name="task_id") Long task_id) {
+		TaskRiskAssess task = computeService.getRiskTask(task_id);
+		if(task==null) {
+			return ProtObj.fail(404, "task not found");
+		}
+		
+		//检查基础数据
+		if(task.getTopoMethod()==null) {
+			return ProtObj.fail(405, "topo select empty");
+		}
+		//变更计算状态
+		task.setComputing(1);
+		computeService.updateRiskTask(task);
+		
+		ProtObj ret = computeService.computeRisk(task);
 		
 		CTopoComputeResult realData = null;
 		if(ret.getErrno()!=0) {

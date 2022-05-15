@@ -23,6 +23,7 @@ import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
 import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dao.TaskLoadFlowDao;
+import com.smartgrid.dao.TaskRiskAssessDao;
 import com.smartgrid.dao.TaskStationTopoDao;
 import com.smartgrid.dto.original.Branch;
 import com.smartgrid.entity.C1BranchLevel;
@@ -37,6 +38,7 @@ import com.smartgrid.entity.ComponentBranch;//add-LC
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.RepaireTask;//add-LC
 import com.smartgrid.entity.TaskLoadFlow;
+import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.ToolKit;
@@ -89,6 +91,18 @@ public class ComputeService {
 	
 	@Autowired
 	private CTopoComputeResultDao topoResultDao;
+	
+	@Autowired
+	private TaskRiskAssessDao taskRiskDao;
+	
+	public TaskRiskAssess getRiskTask(Long id) {
+		return taskRiskDao.getOne(id);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void updateRiskTask(TaskRiskAssess task) {
+		taskRiskDao.save(task);
+	}
 	
 	public TaskStationTopo getTopoTask(Long id) {
 		return topoDao.getOne(id);
@@ -489,4 +503,8 @@ public class ComputeService {
 		}
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
+	public ProtObj computeRisk(TaskRiskAssess task) {
+		return ProtObj.success(1);
+	}
 }
