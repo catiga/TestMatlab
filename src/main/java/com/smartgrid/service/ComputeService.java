@@ -1,6 +1,7 @@
 package com.smartgrid.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -536,14 +537,51 @@ public class ComputeService {
 		double[][] branch_type = ToolKit.convert2ArrayFromString(branch_type_str);
 		double[][] nodes_type = ToolKit.convert2ArrayFromString(nodes_type_str);
 		
-		String[] arrCaseOutPutStr = caseOutPutStr.split(";")[0].split(",");
-		MWCellArray caseOutPut = new MWCellArray(new int[] {arrCaseOutPutStr.length, 1});
-		int index = 0;
-		for(int i=0; i<arrCaseOutPutStr.length; i++) {
-			index++;
-			int[] idx = new int[] {index, 1};
-			caseOutPut.set(idx, arrCaseOutPutStr[i]);
+//		String[] arrCaseOutPutStr = caseOutPutStr.split(";")[0].split(",");
+//		MWCellArray caseOutPut = new MWCellArray(new int[] {arrCaseOutPutStr.length, 1});
+//		int index = 0;
+//		for(int i=0; i<arrCaseOutPutStr.length; i++) {
+//			index++;
+//			int[] idx = new int[] {index, 1};
+//			caseOutPut.set(idx, arrCaseOutPutStr[i]);
+//		}
+		String[] arrCaseOutPutStr = caseOutPutStr.split("\\|");
+		String head_with_item = arrCaseOutPutStr[0];	// 方案1,方案2;鄂府河220,鄂府河220
+		String head = head_with_item.split(";")[0];		// 方案名称列表
+		String item = head_with_item.split(";")[1];		// 悬空节点列表
+		
+		List<List<String>> methods = new ArrayList<>();
+		String[] arrHead = head.split(",");
+		String[] arrItem = item.split(",");
+		for(int i=0; i<arrHead.length; i++) {
+			List<String> method_item = new ArrayList<>();	//格式：方案名称，悬空节点名称，方案明细一，方案明细二。。。。。。方案明细N
+			method_item.add(arrHead[i]);
+			method_item.add(arrItem[i]);
+			
+			for(int j=1; j<arrCaseOutPutStr.length; j++) { //格式：鄂府河220,鄂府河220;鄂临空港220,鄂临空港220 | 鄂府河220,鄂府河220;鄂临空港220,鄂临空港220 | 鄂府河220,鄂府河220;鄂临空港220,鄂临空港220
+				String[] arrMethodContents = arrCaseOutPutStr[j].split(";");	//格式：鄂府河220,鄂府河220;鄂临空港220,鄂临空港220
+				for(String s : arrMethodContents) {	//格式：鄂府河220,鄂府河220
+					method_item.add(s.split(",")[i]);
+				}
+			}
+			methods.add(method_item);
 		}
+		int x = methods.size();
+		int y = 2;
+		int z = methods.get(0).size() / 2;
+		MWCellArray caseOutPut = new MWCellArray(new int[] {x, y, z});
+		for(int i=0; i<x; i++) {
+			List<String> method = methods.get(i);	// [方案1, 鄂府河220, 鄂府河220, 鄂临空港220, 鄂府河220, 鄂临空港220]
+			for(int j=0; j<y; j++) {
+				for(int k=0; k<z; k++) {
+					int [] idx = new int[] {i+1, j+1, k+1};
+					int index = y*j +k;
+					String value = method.get(index);
+					caseOutPut.set(idx, value);
+				}
+			}
+		}
+		
 		
 		List<Map<String, Object>> caseNameList = JackSonBeanMapper.jsonToList(caseNameStr);
 		Map<String, Object> tmp = (Map<String, Object>)caseNameList.get(0).get("head");
@@ -552,7 +590,7 @@ public class ComputeService {
 		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(task.getProjId());
 		double[][] relibilityDataArray = new double[relibilityData.size()][3];
 		
-		index = 0;
+		int index = 0;
 		for(ComponentReliability c : relibilityData) {
 			relibilityDataArray[index][0] = new BigDecimal(c.getBranchType()).doubleValue();
 			relibilityDataArray[index][1] = c.getFailureRate().doubleValue();
