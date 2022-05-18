@@ -197,6 +197,11 @@ public class ComputeController extends WrapperController {
 		return ret;
 	}
 	
+	/**
+	 * 风险评估
+	 * @param task_id
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/api/task/compute/risk/{task_id}")
 	public ProtObj risk_compute(@PathVariable(name="task_id") Long task_id) {

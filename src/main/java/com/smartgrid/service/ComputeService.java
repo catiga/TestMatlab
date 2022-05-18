@@ -2,6 +2,7 @@ package com.smartgrid.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,9 @@ import com.smartgrid.dao.C1BusLevelDao;
 import com.smartgrid.dao.C1GeneratorLevelAreaDao;
 import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
+import com.smartgrid.dao.CRiskComputeResultDao;
 import com.smartgrid.dao.CTopoComputeResultDao;
+import com.smartgrid.dao.ComponentReliabilityDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
 import com.smartgrid.dao.RepaireTaskDao;
@@ -26,25 +29,25 @@ import com.smartgrid.dao.TaskLoadFlowDao;
 import com.smartgrid.dao.TaskRiskAssessDao;
 import com.smartgrid.dao.TaskStationTopoDao;
 import com.smartgrid.dto.original.Branch;
-import com.smartgrid.entity.C1BranchLevel;
 import com.smartgrid.entity.C1BranchLevelArea;
-import com.smartgrid.entity.C1BusLevel;
 import com.smartgrid.entity.C1BusLevelArea;
-import com.smartgrid.entity.C1GeneratorLevel;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
 import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.ComponentBranch;//add-LC
+import com.smartgrid.entity.ComponentReliability;
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.RepaireTask;//add-LC
 import com.smartgrid.entity.TaskLoadFlow;
 import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.response.ProtObj;
+import com.smartgrid.util.JackSonBeanMapper;
 import com.smartgrid.util.ToolKit;
 
 import CalculteTopo.CalculateTopo;
 import calculatePf.CalculatePf;
+import riskAssessment.RiskAssessment;
 
 @Service
 public class ComputeService {
@@ -94,6 +97,12 @@ public class ComputeService {
 	
 	@Autowired
 	private TaskRiskAssessDao taskRiskDao;
+	
+	@Autowired
+	private CRiskComputeResultDao riskResultDao;
+	
+	@Autowired
+	private ComponentReliabilityDao componentReliabilityDao;
 	
 	public TaskRiskAssess getRiskTask(Long id) {
 		return taskRiskDao.getOne(id);
@@ -505,6 +514,61 @@ public class ComputeService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computeRisk(TaskRiskAssess task) {
+		CTopoComputeResult topoResult = topoResultDao.getOne(task.getTopoId());
+		if(topoResult==null) {
+			return ProtObj.fail(401, "topo compute result empty");
+		}
+		//开始组织数据
+		String bus_maintance_sets_3d_str = topoResult.getBusMaintanceSets3d();
+		String branch_maintance_sets_3d_str = topoResult.getBranchMaintanceSets3d();
+		String gen_maintance_sets_3d_str = topoResult.getGenMaintanceSets3d();
+		
+		String branch_type_str = topoResult.getBranchType();
+		String nodes_type_str = topoResult.getNodesType();
+		String caseOutPutStr = topoResult.getCaseOutput();
+		String caseNameStr = task.getTopoMethod();	//这里要取json里面的head的name
+		
+		//输入数据
+		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
+		double[][][] branch_maintance_sets_3d = ToolKit.convert3ArrayFromString(branch_maintance_sets_3d_str);
+		double[][][] gen_maintance_sets_3d = ToolKit.convert3ArrayFromString(gen_maintance_sets_3d_str);
+		Integer branch_numbers = topoResult.getBranchNumbers();
+		double[][] branch_type = ToolKit.convert2ArrayFromString(branch_type_str);
+		double[][] nodes_type = ToolKit.convert2ArrayFromString(nodes_type_str);
+		
+		String[] arrCaseOutPutStr = caseOutPutStr.split(";")[0].split(",");
+		MWCellArray caseOutPut = new MWCellArray(new int[] {arrCaseOutPutStr.length, 1});
+		int index = 0;
+		for(int i=0; i<arrCaseOutPutStr.length; i++) {
+			index++;
+			int[] idx = new int[] {index, 1};
+			caseOutPut.set(idx, arrCaseOutPutStr[i]);
+		}
+		
+		List<Map<String, Object>> caseNameList = JackSonBeanMapper.jsonToList(caseNameStr);
+		Map<String, Object> tmp = (Map<String, Object>)caseNameList.get(0).get("head");
+		String caseName = tmp.get("name").toString();
+		
+		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(task.getProjId());
+		double[][] relibilityDataArray = new double[relibilityData.size()][3];
+		
+		index = 0;
+		for(ComponentReliability c : relibilityData) {
+			relibilityDataArray[index][0] = new BigDecimal(c.getBranchType()).doubleValue();
+			relibilityDataArray[index][1] = c.getFailureRate().doubleValue();
+			relibilityDataArray[index][2] = c.getRepairTime().doubleValue();
+			index++;
+		}
+		
+		try {
+			RiskAssessment calRiskAssess = new RiskAssessment();
+			Object[] objects = calRiskAssess.riskAssessment(6, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, caseName);
+			System.out.println(objects);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 		return ProtObj.success(1);
 	}
 }
