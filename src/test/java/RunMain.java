@@ -11,6 +11,7 @@ import CalculateAssess.Calculate7;
 import calculatePf.CalculatePf;
 //import CalculteTopo.Class4;
 import calculate1.Calculate1;
+//import riskAssessmentPart.Calculate5;
 
 public class RunMain {
 
@@ -177,11 +178,13 @@ public class RunMain {
 		 */
         
         //riskAssessmentSingle
-//        riskass c5 = new Calculate5();
-//        Object [] results5 = c5.riskAssessmentSingle(9,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,branch_numbers,branch_type,reliability,nodes_type);
-//        for (int i5=0;i5<results5.length;i5++) {
-//          System.out.println(results5[i5]);
-//        }
+		/*
+		 * Calculate5 c5 = new Calculate5(); Object [] results5 =
+		 * c5.riskAssessmentSingle(9,bus_maintance_set_one,branch_maintance_set_one,
+		 * generator_maintance_set_one,branch_numbers,branch_type,reliability,nodes_type
+		 * ); for (int i5=0;i5<results5.length;i5++) { System.out.println(results5[i5]);
+		 * }
+		 */
         
         //CalculateAnalyze
         Calculate6 c6 = new Calculate6();
