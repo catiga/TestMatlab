@@ -533,9 +533,67 @@ public class ComputeService {
 		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
 		double[][][] branch_maintance_sets_3d = ToolKit.convert3ArrayFromString(branch_maintance_sets_3d_str);
 		double[][][] gen_maintance_sets_3d = ToolKit.convert3ArrayFromString(gen_maintance_sets_3d_str);
-		Integer branch_numbers = topoResult.getBranchNumbers();
+		
+		//branch——numbers数据类型需要修改
+		//Integer branch_numbers = topoResult.getBranchNumbers();
+		
+		double[][]branch_numbers = new double[113][1];
+		for(int i=1; i<112 ; i++) {
+			branch_numbers[i][0] = i+1.0;
+		}
+		branch_numbers[112][0] = 114.0;
+		
+		
 		double[][] branch_type = ToolKit.convert2ArrayFromString(branch_type_str);
 		double[][] nodes_type = ToolKit.convert2ArrayFromString(nodes_type_str);
+		
+		
+		//处理bus_maintance_sets_3d、branch_maintance_sets_3d、gen_maintance_sets_3d的数据结构
+//		int columnsBus = tmp_bus_maintance_sets_3d[0].length;//分别获取数据库内bus3D三个维度
+//		int rowsBus = tmp_bus_maintance_sets_3d[0][0].length;
+//		int pageBus = tmp_bus_maintance_sets_3d.length;
+//		int columnsBranch = tmp_branch_maintance_sets_3d[0].length;//分别获取数据库内branch3D三个维度
+//		int rowsBranch = tmp_branch_maintance_sets_3d[0][0].length;
+//		int pageBranch = tmp_branch_maintance_sets_3d.length;
+//		int columnsGen = tmp_gen_maintance_sets_3d[0].length;//分别获取数据库内gen3D三个维度
+//		int rowsGen = tmp_gen_maintance_sets_3d[0][0].length;
+//		int pageGen = tmp_gen_maintance_sets_3d.length;
+
+//		double[][][] bus_maintance_sets_3d = new double[rowsBus][pageBus][columnsBus];//构建需要传入方法的3D矩阵
+//		double[][][] branch_maintance_sets_3d = new double[rowsBranch][pageBranch][columnsBranch];
+//		double[][][] gen_maintance_sets_3d = new double[rowsGen][pageGen][columnsGen];
+		
+//		for(int i=0 ; i<pageBus ; i++) {                     //为bus3D矩阵赋值
+//			for(int j=0 ; j<columnsBus ; j++) {
+//				for(int k=0 ; k<rowsBus ; k++) {
+//					bus_maintance_sets_3d[k][i][j] = tmp_bus_maintance_sets_3d[i][j][k];
+//				}
+
+//			}
+			
+//		}
+
+///		for(int i=0 ; i<pageBranch ; i++) {                     //为branch3D矩阵赋值
+//			for(int j=0 ; j<columnsBranch ; j++) {
+//				for(int k=0 ; k<rowsBranch ; k++) {
+//					branch_maintance_sets_3d[k][i][j] = tmp_branch_maintance_sets_3d[i][j][k];
+//				}
+//
+//			}
+			
+//		}
+		
+//		for(int i=0 ; i<pageGen ; i++) {                     //为gen3D矩阵赋值
+//			for(int j=0 ; j<columnsGen ; j++) {
+//				for(int k=0 ; k<rowsGen ; k++) {
+//					gen_maintance_sets_3d[k][i][j] = tmp_gen_maintance_sets_3d[i][j][k];
+//				}
+//
+//			}
+//			
+//		}
+		
+
 		
 //		String[] arrCaseOutPutStr = caseOutPutStr.split(";")[0].split(",");
 //		MWCellArray caseOutPut = new MWCellArray(new int[] {arrCaseOutPutStr.length, 1});
@@ -566,15 +624,17 @@ public class ComputeService {
 			}
 			methods.add(method_item);
 		}
-		int x = methods.size();
+		
+		//caseOutput在matalb里为z*x*y
+		int x = methods.size();//caseOutput在matalb里为
 		int y = 2;
 		int z = methods.get(0).size() / 2;
 		MWCellArray caseOutPut = new MWCellArray(new int[] {x, y, z});
 		for(int i=0; i<x; i++) {
 			List<String> method = methods.get(i);	// [方案1, 鄂府河220, 鄂府河220, 鄂临空港220, 鄂府河220, 鄂临空港220]
-			for(int j=0; j<y; j++) {
-				for(int k=0; k<z; k++) {
-					int [] idx = new int[] {i+1, j+1, k+1};
+			for(int j=0; j<z; j++) {      //caseoutput第j行
+				for(int k=0; k<y; k++) {  //caseoutput第k列
+					int [] idx = new int[] {j+1, k+1, i+1};
 					int index = y*j +k;
 					String value = method.get(index);
 					caseOutPut.set(idx, value);
@@ -610,3 +670,29 @@ public class ComputeService {
 		return ProtObj.success(1);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
