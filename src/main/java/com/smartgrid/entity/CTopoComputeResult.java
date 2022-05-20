@@ -40,7 +40,7 @@ public class CTopoComputeResult implements Serializable {
 	private String branchType;
 	
 	@Column(name = "branch_numbers")
-	private Integer branchNumbers;
+	private String branchNumbers;
 	
 	@Column(name = "num_topo_maintance")
 	private Integer numTopoMaintance;
@@ -115,11 +115,11 @@ public class CTopoComputeResult implements Serializable {
 		this.branchType = branchType;
 	}
 
-	public Integer getBranchNumbers() {
+	public String getBranchNumbers() {
 		return branchNumbers;
 	}
 
-	public void setBranchNumbers(Integer branchNumbers) {
+	public void setBranchNumbers(String branchNumbers) {
 		this.branchNumbers = branchNumbers;
 	}
 

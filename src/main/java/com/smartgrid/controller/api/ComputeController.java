@@ -15,6 +15,7 @@ import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.controller.api.wrapper.WrapperController;
 import com.smartgrid.dao.RepaireTaskDao;
+import com.smartgrid.entity.CRiskComputeResult;
 import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.ProjectParam;
@@ -220,12 +221,12 @@ public class ComputeController extends WrapperController {
 		
 		ProtObj ret = computeService.computeRisk(task);
 		
-		CTopoComputeResult realData = null;
+		CRiskComputeResult realData = null;
 		if(ret.getErrno()!=0) {
 			return ret;
 		}
 		if(ret.getData()!=null) {
-			realData = (CTopoComputeResult)ret.getData();
+			realData = (CRiskComputeResult)ret.getData();
 		}
 		if(realData==null) {
 			return ProtObj.fail(900, "compute failed");

@@ -34,6 +34,7 @@ import com.smartgrid.entity.C1BranchLevelArea;
 import com.smartgrid.entity.C1BusLevelArea;
 import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
+import com.smartgrid.entity.CRiskComputeResult;
 import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.ComponentBranch;//add-LC
 import com.smartgrid.entity.ComponentReliability;
@@ -288,7 +289,7 @@ public class ComputeService {
 			double[][][] branch_maintance_sets_3D = (double[][][])t3.toDoubleArray();
 			double[][][] gen_maintance_sets_3D = (double[][][])t4.toDoubleArray();
 			int[][] branch_Type = (int[][])t5.toIntArray();
-			int branch_numbers = t6.getInt();
+			double[][] branch_numbers = (double[][])t6.toDoubleArray();
 			int num_topo_maintance = t7.getInt();
 			int flag_connect = t8.getInt();
 			MWCellArray caseOutput = t9;
@@ -308,11 +309,14 @@ public class ComputeService {
 			StringBuilder branch_TypeStr = new StringBuilder();
 			ToolKit.objectArrayToString(branch_TypeStr, 2, ToolKit.converArrayObject(branch_Type), 2);
 			
+			StringBuilder branch_numbersStr = new StringBuilder();
+			ToolKit.objectArrayToString(branch_numbersStr, 2, ToolKit.converArrayObject(branch_numbers), 2);
+			
 			String caseOutputStr = ToolKit.cellArrayToString3(caseOutput);
 			
 			CTopoComputeResult result = new CTopoComputeResult();
 			result.setBranchMaintanceSets3d(branch_maintance_sets_3DStr.toString());
-			result.setBranchNumbers(branch_numbers);
+			result.setBranchNumbers(branch_numbersStr.toString());
 			result.setBranchType(branch_TypeStr.toString());
 			result.setBusMaintanceSets3d(bus_maintance_sets_3DStr.toString());
 			result.setFlagConnect(flag_connect);
@@ -528,21 +532,21 @@ public class ComputeService {
 		String nodes_type_str = topoResult.getNodesType();
 		String caseOutPutStr = topoResult.getCaseOutput();
 		String caseNameStr = task.getTopoMethod();	//这里要取json里面的head的name
+		String branch_numbers_str = topoResult.getBranchNumbers();
 		
 		//输入数据
 		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
 		double[][][] branch_maintance_sets_3d = ToolKit.convert3ArrayFromString(branch_maintance_sets_3d_str);
 		double[][][] gen_maintance_sets_3d = ToolKit.convert3ArrayFromString(gen_maintance_sets_3d_str);
-		
+		double[][] branch_numbers = ToolKit.convert2ArrayFromString(branch_numbers_str);
 		//branch——numbers数据类型需要修改
 		//Integer branch_numbers = topoResult.getBranchNumbers();
 		
-		double[][]branch_numbers = new double[113][1];
-		for(int i=1; i<112 ; i++) {
-			branch_numbers[i][0] = i+1.0;
-		}
-		branch_numbers[112][0] = 114.0;
-		
+//		double[][]branch_numbers = new double[113][1];
+//		for(int i=1; i<112 ; i++) {
+//			branch_numbers[i][0] = i+1.0;
+//		}
+//		branch_numbers[112][0] = 114.0;
 		
 		double[][] branch_type = ToolKit.convert2ArrayFromString(branch_type_str);
 		double[][] nodes_type = ToolKit.convert2ArrayFromString(nodes_type_str);
@@ -642,7 +646,6 @@ public class ComputeService {
 			}
 		}
 		
-		
 		List<Map<String, Object>> caseNameList = JackSonBeanMapper.jsonToList(caseNameStr);
 		Map<String, Object> tmp = (Map<String, Object>)caseNameList.get(0).get("head");
 		String caseName = tmp.get("name").toString();
@@ -661,13 +664,36 @@ public class ComputeService {
 		try {
 			RiskAssessment calRiskAssess = new RiskAssessment();
 			Object[] objects = calRiskAssess.riskAssessment(6, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, caseName);
-			System.out.println(objects);
+			MWNumericArray t0 = (MWNumericArray)objects[0];
+			MWNumericArray t1 = (MWNumericArray)objects[1];
+			MWNumericArray t2 = (MWNumericArray)objects[2];
+			MWNumericArray t3 = (MWNumericArray)objects[3];
+			MWNumericArray t4 = (MWNumericArray)objects[4];
+			MWNumericArray t5 = (MWNumericArray)objects[5];
+			
+			CRiskComputeResult result = new CRiskComputeResult();
+			result.setProjId(task.getProjId());
+			result.setTaskId(task.getId());
+			result.setMfs(BigDecimal.valueOf(t0.getDouble()));
+			result.setEo(BigDecimal.valueOf(t1.getDouble()));
+			result.setMhvs(BigDecimal.valueOf(t2.getDouble()));
+			result.setMlvs(BigDecimal.valueOf(t3.getDouble()));
+			result.setEhvv(BigDecimal.valueOf(t4.getDouble()));
+			result.setElvv(BigDecimal.valueOf(t5.getDouble()));
+			
+			riskResultDao.deleteByTaskId(task.getId());
+			riskResultDao.save(result);
+			
+			task.setComputing(2);
+			taskRiskDao.save(task);
+			
+			return ProtObj.success(result);
 		} catch(Exception e) {
 			e.printStackTrace();
+			task.setComputing(3);
+			taskRiskDao.save(task);
+			return ProtObj.fail(501, e.toString());
 		}
-		
-		
-		return ProtObj.success(1);
 	}
 }
 
