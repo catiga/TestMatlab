@@ -53,7 +53,7 @@ import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.JackSonBeanMapper;
 import com.smartgrid.util.ToolKit;
 
-import CalculateAssess.Calculate7;
+import calculateAssess.CalculateAccess;
 import CalculteTopo.CalculateTopo;
 import calculateAnalyze.CalculateAnalyze;
 import calculatePf.CalculatePf;
@@ -915,9 +915,9 @@ public class ComputeService {
 		}
 		
 		try {
-			Calculate7 calAnalyze = new Calculate7();
+			CalculateAccess calAccess = new CalculateAccess();
 			
-			Object[] objects = calAnalyze.CalculateAssess(3, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, 
+			Object[] objects = calAccess.calculateAssess(3, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, 
 					branch_numbers, branch_type, relibilityDataArray, nodes_type, 
 					caseSet, caseOutPut);
 			
