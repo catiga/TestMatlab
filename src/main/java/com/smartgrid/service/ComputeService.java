@@ -649,6 +649,7 @@ public class ComputeService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computeWeak(TaskWeak task) {
+
 		CTopoComputeResult topoResult = topoResultDao.getOne(task.getTopoId());
 		if(topoResult==null) {
 			return ProtObj.fail(401, "topo compute result empty");
@@ -712,7 +713,7 @@ public class ComputeService {
 		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
 		double[][][] branch_maintance_sets_3d = ToolKit.convert3ArrayFromString(branch_maintance_sets_3d_str);
 		double[][][] gen_maintance_sets_3d = ToolKit.convert3ArrayFromString(gen_maintance_sets_3d_str);
-		double num_topo_maintance = 2d;	//方案数目
+//		double num_topo_maintance = 2d;	//方案数目
 		
 		double[][] branch_numbers = ToolKit.convert2ArrayFromString(branch_numbers_str);
 		
@@ -771,7 +772,7 @@ public class ComputeService {
 		try {
 			CalculateAnalyze calAnalyze = new CalculateAnalyze();
 			
-			Object[] objects = calAnalyze.calculateAnalyze(2, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, num_topo_maintance, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, raCase, bus_name, mainwire_original_branch, maintance_Target, bus_level_area);
+			Object[] objects = calAnalyze.calculateAnalyze(2, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, raCase, bus_name, mainwire_original_branch, maintance_Target, bus_level_area);
 			MWCellArray t0 = (MWCellArray)objects[0];
 			MWCellArray t1 = (MWCellArray)objects[1];
 			

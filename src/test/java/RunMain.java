@@ -6,8 +6,8 @@ import com.smartgrid.dto.original.Branch;
 import com.smartgrid.dto.pfresult.DataPfresult;
 import com.smartgrid.dto.pfwork.DataPfwork;
 
-import CalculateAnalyze.Calculate6;
-import CalculateAssess.Calculate7;
+//import CalculateAnalyze.Calculate6;
+//import CalculateAssess.Calculate7;
 import calculatePf.CalculatePf;
 //import CalculteTopo.Class4;
 import calculate1.Calculate1;
@@ -187,16 +187,16 @@ public class RunMain {
 		 */
         
         //CalculateAnalyze
-        Calculate6 c6 = new Calculate6();
-        Object [] results6 = c6.CalculateAnalyze(5,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,1.0,branch_numbers,branch_type,reliability,nodes_type);
-        for (int i6=0;i6<results6.length;i6++) {
-          System.out.println(results6[i6]);
-        }
+       // Calculate6 c6 = new Calculate6();
+        //Object [] results6 = c6.CalculateAnalyze(5,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,1.0,branch_numbers,branch_type,reliability,nodes_type);
+        //for (int i6=0;i6<results6.length;i6++) {
+       //   System.out.println(results6[i6]);
+       // }
        
         //CalculateAssess-"defective jar"
-        Calculate7 c7 = new Calculate7();
-        Object [] results7 = c7.CalculateAssess(1,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,1.0,branch_numbers,branch_type,reliability,nodes_type);
-        System.out.println(results7);
+      //  Calculate7 c7 = new Calculate7();
+       // Object [] results7 = c7.CalculateAssess(1,bus_maintance_set_one,branch_maintance_set_one,generator_maintance_set_one,1.0,branch_numbers,branch_type,reliability,nodes_type);
+       // System.out.println(results7);
     }
 
 }
