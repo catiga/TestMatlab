@@ -17,10 +17,13 @@ import com.smartgrid.controller.api.wrapper.WrapperController;
 import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.entity.CRiskComputeResult;
 import com.smartgrid.entity.CTopoComputeResult;
+import com.smartgrid.entity.CWeakComputeResult;
+import com.smartgrid.entity.CohComputeResult;
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.ProjectParam;
 import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.entity.TaskLoadFlow;
+import com.smartgrid.entity.TaskOverhaul;
 import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.entity.TaskWeak;
@@ -259,12 +262,12 @@ public class ComputeController extends WrapperController {
 		
 		ProtObj ret = computeService.computeWeak(task);
 		
-		CRiskComputeResult realData = null;
+		CWeakComputeResult realData = null;
 		if(ret.getErrno()!=0) {
 			return ret;
 		}
 		if(ret.getData()!=null) {
-			realData = (CRiskComputeResult)ret.getData();
+			realData = (CWeakComputeResult)ret.getData();
 		}
 		if(realData==null) {
 			return ProtObj.fail(900, "compute failed");
@@ -273,4 +276,30 @@ public class ComputeController extends WrapperController {
 		return ret;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/api/task/compute/overhaul/{task_id}")
+	public ProtObj overhaul_compute(@PathVariable(name="task_id") Long task_id) {
+		TaskOverhaul task = computeService.getOverhaulTask(task_id);
+		if(task==null) {
+			return ProtObj.fail(404, "task not found");
+		}
+		//变更计算状态
+		task.setComputing(1);
+		computeService.updateOverhaulTask(task);
+		
+		ProtObj ret = computeService.computeOverhaul(task);
+		
+		CohComputeResult realData = null;
+		if(ret.getErrno()!=0) {
+			return ret;
+		}
+		if(ret.getData()!=null) {
+			realData = (CohComputeResult)ret.getData();
+		}
+		if(realData==null) {
+			return ProtObj.fail(900, "compute failed");
+		}
+		
+		return ret;
+	}
 }

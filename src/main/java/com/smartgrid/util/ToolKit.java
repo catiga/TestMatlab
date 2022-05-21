@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.mathworks.toolbox.javabuilder.MWArray;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
+import com.mathworks.toolbox.javabuilder.MWNumericArray;
 
 public class ToolKit {
 	
@@ -164,6 +165,31 @@ public class ToolKit {
 			}
 		}
 		return data;
+	}
+	
+	public static String cellArrayToString2(MWCellArray cellArray) {
+		StringBuilder buffer = new StringBuilder();
+		
+		int[] dimen = cellArray.getDimensions();
+		int row = dimen[0];
+		int col = dimen[1];
+		for(int i=0; i<row; i++) {
+			StringBuilder rowItem = new StringBuilder();
+			for(int j=0; j<col; j++) {
+				Object colObj = cellArray.getCell(new int[] {i+1, j+1});
+				Object value = "#";
+				if(colObj instanceof MWNumericArray) {
+					double tmpV = ((MWNumericArray)colObj).getDouble();
+					value = tmpV + "";
+				} else if(colObj instanceof MWArray) {
+					value = buildString(((MWArray)colObj).getData());
+				}
+				rowItem.append(value + ",");
+			}
+			
+			buffer.append(rowItem.substring(0, rowItem.length() - 1) + ";");
+		}
+		return buffer.substring(0, buffer.length() - 1);
 	}
 	
 	public static String cellArrayToString(MWCellArray cellArray) {

@@ -22,11 +22,13 @@ import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.CRiskComputeResultDao;
 import com.smartgrid.dao.CTopoComputeResultDao;
+import com.smartgrid.dao.CWeakComputeResultDao;
 import com.smartgrid.dao.ComponentReliabilityDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
 import com.smartgrid.dao.RepaireTaskDao;
 import com.smartgrid.dao.TaskLoadFlowDao;
+import com.smartgrid.dao.TaskOverhaulDao;
 import com.smartgrid.dao.TaskRiskAssessDao;
 import com.smartgrid.dao.TaskStationTopoDao;
 import com.smartgrid.dao.TaskWeakDao;
@@ -37,11 +39,13 @@ import com.smartgrid.entity.C1GeneratorLevelArea;
 import com.smartgrid.entity.C1TableNodeLevelProvince;
 import com.smartgrid.entity.CRiskComputeResult;
 import com.smartgrid.entity.CTopoComputeResult;
+import com.smartgrid.entity.CWeakComputeResult;
 import com.smartgrid.entity.ComponentBranch;//add-LC
 import com.smartgrid.entity.ComponentReliability;
 import com.smartgrid.entity.CpfComputeResult;
 import com.smartgrid.entity.RepaireTask;//add-LC
 import com.smartgrid.entity.TaskLoadFlow;
+import com.smartgrid.entity.TaskOverhaul;
 import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
 import com.smartgrid.entity.TaskWeak;
@@ -49,6 +53,7 @@ import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.JackSonBeanMapper;
 import com.smartgrid.util.ToolKit;
 
+import CalculateAssess.Calculate7;
 import CalculteTopo.CalculateTopo;
 import calculateAnalyze.CalculateAnalyze;
 import calculatePf.CalculatePf;
@@ -111,6 +116,21 @@ public class ComputeService {
 	
 	@Autowired
 	private TaskWeakDao taskWeakDao;
+	
+	@Autowired
+	private CWeakComputeResultDao weakResultDao;
+	
+	@Autowired
+	private TaskOverhaulDao overhaulDao;
+	
+	public TaskOverhaul getOverhaulTask(Long id) {
+		return overhaulDao.getOne(id);
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void updateOverhaulTask(TaskOverhaul task) {
+		overhaulDao.save(task);
+	}
 	
 	public TaskWeak getWeakTask(Long id) {
 		return taskWeakDao.getOne(id);
@@ -776,6 +796,14 @@ public class ComputeService {
 			MWCellArray t0 = (MWCellArray)objects[0];
 			MWCellArray t1 = (MWCellArray)objects[1];
 			
+			CWeakComputeResult result = new CWeakComputeResult();
+			result.setProjId(task.getProjId());
+			result.setTaskId(task.getId());
+			result.setWeakLoad(ToolKit.cellArrayToString2(t0));
+			result.setWeakVoltage(ToolKit.cellArrayToString2(t1));
+			
+			weakResultDao.deleteByTaskId(task.getId());
+			weakResultDao.save(result);
 			
 			task.setComputing(2);
 			taskWeakDao.save(task);
@@ -789,6 +817,133 @@ public class ComputeService {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	@Transactional(rollbackFor = Exception.class)
+	public ProtObj computeOverhaul(TaskOverhaul task) {
+
+		CTopoComputeResult topoResult = topoResultDao.getOne(task.getTopoId());
+		if(topoResult==null) {
+			return ProtObj.fail(401, "topo compute result empty");
+		}
+		//开始组织数据
+		String bus_maintance_sets_3d_str = topoResult.getBusMaintanceSets3d();
+		String branch_maintance_sets_3d_str = topoResult.getBranchMaintanceSets3d();
+		String gen_maintance_sets_3d_str = topoResult.getGenMaintanceSets3d();
+		
+		String branch_numbers_str = topoResult.getBranchNumbers();
+		String branch_type_str = topoResult.getBranchType();
+		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(task.getProjId());
+		String nodes_type_str = topoResult.getNodesType();
+		String caseOutPutStr = topoResult.getCaseOutput();
+		
+		//maintance_branch_original
+		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
+        if(projectComponentBranchData==null || projectComponentBranchData.isEmpty()) {
+        	return ProtObj.fail(403, "Branch Data empty");
+        }
+		
+		//输入数据
+		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
+		double[][][] branch_maintance_sets_3d = ToolKit.convert3ArrayFromString(branch_maintance_sets_3d_str);
+		double[][][] gen_maintance_sets_3d = ToolKit.convert3ArrayFromString(gen_maintance_sets_3d_str);
+//		double num_topo_maintance = 2d;	//方案数目
+		
+		double[][] branch_numbers = ToolKit.convert2ArrayFromString(branch_numbers_str);
+		
+		double[][] branch_type = ToolKit.convert2ArrayFromString(branch_type_str);
+		
+		double[][] nodes_type = ToolKit.convert2ArrayFromString(nodes_type_str);
+		
+		String[] arrCaseOutPutStr = caseOutPutStr.split("\\|");
+		String head_with_item = arrCaseOutPutStr[0];	// 方案1,方案2;鄂府河220,鄂府河220
+		String head = head_with_item.split(";")[0];		// 方案名称列表
+		String item = head_with_item.split(";")[1];		// 悬空节点列表
+		
+		List<List<String>> methods = new ArrayList<>();
+		String[] arrHead = head.split(",");
+		String[] arrItem = item.split(",");
+		for(int i=0; i<arrHead.length; i++) {
+			List<String> method_item = new ArrayList<>();	//格式：方案名称，悬空节点名称，方案明细一，方案明细二。。。。。。方案明细N
+			method_item.add(arrHead[i]);
+			method_item.add(arrItem[i]);
+			
+			for(int j=1; j<arrCaseOutPutStr.length; j++) { //格式：鄂府河220,鄂府河220;鄂临空港220,鄂临空港220 | 鄂府河220,鄂府河220;鄂临空港220,鄂临空港220 | 鄂府河220,鄂府河220;鄂临空港220,鄂临空港220
+				String[] arrMethodContents = arrCaseOutPutStr[j].split(";");	//格式：鄂府河220,鄂府河220;鄂临空港220,鄂临空港220
+				for(String s : arrMethodContents) {	//格式：鄂府河220,鄂府河220
+					method_item.add(s.split(",")[i]);
+				}
+			}
+			methods.add(method_item);
+		}
+		
+		MWCellArray caseSet = new MWCellArray(new int[] {arrHead.length, 1});
+		for(int i=0 ;i<arrHead.length; i++) {
+			int[] idx = new int[] {i+1, 1};
+			caseSet.set(idx, arrHead[i]);
+		}
+		
+		//caseOutput在matalb里为z*x*y
+		int x = methods.size();//caseOutput在matalb里为
+		int y = 2;
+		int z = methods.get(0).size() / 2;
+		MWCellArray caseOutPut = new MWCellArray(new int[] {x, y, z});
+		for(int i=0; i<x; i++) {
+			List<String> method = methods.get(i);	// [方案1, 鄂府河220, 鄂府河220, 鄂临空港220, 鄂府河220, 鄂临空港220]
+			for(int j=0; j<z; j++) {      //caseoutput第j行
+				for(int k=0; k<y; k++) {  //caseoutput第k列
+					int [] idx = new int[] {j+1, k+1, i+1};
+					int index = y*j +k;
+					String value = method.get(index);
+					caseOutPut.set(idx, value);
+				}
+			}
+		}
+		
+		double[][] relibilityDataArray = new double[relibilityData.size()][3];
+		int index = 0;
+		for(ComponentReliability c : relibilityData) {
+			relibilityDataArray[index][0] = new BigDecimal(c.getBranchType()).doubleValue();
+			relibilityDataArray[index][1] = c.getFailureRate().doubleValue();
+			relibilityDataArray[index][2] = c.getRepairTime().doubleValue();
+			index++;
+		}
+		
+		try {
+			Calculate7 calAnalyze = new Calculate7();
+			
+			Object[] objects = calAnalyze.CalculateAssess(3, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, 
+					branch_numbers, branch_type, relibilityDataArray, nodes_type, 
+					caseSet, caseOutPut);
+			
+//			MWCellArray t0 = (MWCellArray)objects[0];
+//			MWCellArray t1 = (MWCellArray)objects[1];
+//			
+//			CWeakComputeResult result = new CWeakComputeResult();
+//			result.setProjId(task.getProjId());
+//			result.setTaskId(task.getId());
+//			result.setWeakLoad(ToolKit.cellArrayToString2(t0));
+//			result.setWeakVoltage(ToolKit.cellArrayToString2(t1));
+//			
+//			weakResultDao.deleteByTaskId(task.getId());
+//			weakResultDao.save(result);
+//			
+//			task.setComputing(2);
+//			taskWeakDao.save(task);
+			
+			return ProtObj.success(1);
+		} catch(Exception e) {
+			e.printStackTrace();
+			task.setComputing(3);
+			overhaulDao.save(task);
+			return ProtObj.fail(501, e.toString());
+		}
+	}
 }
 
 
