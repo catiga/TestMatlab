@@ -23,6 +23,7 @@ import com.smartgrid.entity.RepaireTask;
 import com.smartgrid.entity.TaskLoadFlow;
 import com.smartgrid.entity.TaskRiskAssess;
 import com.smartgrid.entity.TaskStationTopo;
+import com.smartgrid.entity.TaskWeak;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.service.C1Service;
 import com.smartgrid.service.ComputeService;
@@ -234,4 +235,42 @@ public class ComputeController extends WrapperController {
 		
 		return ret;
 	}
+	
+	/**
+	 * 薄弱分析
+	 * @param task_id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/api/task/compute/weak/{task_id}")
+	public ProtObj weak_compute(@PathVariable(name="task_id") Long task_id) {
+		TaskWeak task = computeService.getWeakTask(task_id);
+		if(task==null) {
+			return ProtObj.fail(404, "task not found");
+		}
+		
+		//检查基础数据
+		if(task.getTopoMethod()==null) {
+			return ProtObj.fail(405, "topo select empty");
+		}
+		//变更计算状态
+		task.setComputing(1);
+		computeService.updateWeakTask(task);
+		
+		ProtObj ret = computeService.computeWeak(task);
+		
+		CRiskComputeResult realData = null;
+		if(ret.getErrno()!=0) {
+			return ret;
+		}
+		if(ret.getData()!=null) {
+			realData = (CRiskComputeResult)ret.getData();
+		}
+		if(realData==null) {
+			return ProtObj.fail(900, "compute failed");
+		}
+		
+		return ret;
+	}
+	
 }
