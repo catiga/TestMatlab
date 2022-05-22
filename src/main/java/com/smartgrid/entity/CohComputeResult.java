@@ -23,6 +23,15 @@ public class CohComputeResult implements Serializable {
 	
 	@Column(name = "proj_id")
 	private Long projId;
+	
+	@Column(name = "best_case")
+	private String bestCase;
+	
+	@Column(name = "input_data_best")
+	private String inputDataBest;
+	
+	@Column(name = "case_output_best")
+	private String caseOutputBest;
 
 	public Long getId() {
 		return id;
@@ -46,6 +55,30 @@ public class CohComputeResult implements Serializable {
 
 	public void setProjId(Long projId) {
 		this.projId = projId;
+	}
+
+	public String getBestCase() {
+		return bestCase;
+	}
+
+	public void setBestCase(String bestCase) {
+		this.bestCase = bestCase;
+	}
+
+	public String getInputDataBest() {
+		return inputDataBest;
+	}
+
+	public void setInputDataBest(String inputDataBest) {
+		this.inputDataBest = inputDataBest;
+	}
+
+	public String getCaseOutputBest() {
+		return caseOutputBest;
+	}
+
+	public void setCaseOutputBest(String caseOutputBest) {
+		this.caseOutputBest = caseOutputBest;
 	}
 	
 }

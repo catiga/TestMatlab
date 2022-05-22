@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mathworks.toolbox.javabuilder.MWCellArray;
+import com.mathworks.toolbox.javabuilder.MWCharArray;
 import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
@@ -23,6 +24,7 @@ import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.CRiskComputeResultDao;
 import com.smartgrid.dao.CTopoComputeResultDao;
 import com.smartgrid.dao.CWeakComputeResultDao;
+import com.smartgrid.dao.CohComputeResultDao;
 import com.smartgrid.dao.ComponentReliabilityDao;
 import com.smartgrid.dao.Component_branchDao;//add-LC
 import com.smartgrid.dao.CpfComputeResultDao;
@@ -40,6 +42,7 @@ import com.smartgrid.entity.C1TableNodeLevelProvince;
 import com.smartgrid.entity.CRiskComputeResult;
 import com.smartgrid.entity.CTopoComputeResult;
 import com.smartgrid.entity.CWeakComputeResult;
+import com.smartgrid.entity.CohComputeResult;
 import com.smartgrid.entity.ComponentBranch;//add-LC
 import com.smartgrid.entity.ComponentReliability;
 import com.smartgrid.entity.CpfComputeResult;
@@ -52,10 +55,11 @@ import com.smartgrid.entity.TaskWeak;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.JackSonBeanMapper;
 import com.smartgrid.util.ToolKit;
+import com.sun.media.sound.Toolkit;
 
-import calculateAssess.CalculateAccess;
 import CalculteTopo.CalculateTopo;
 import calculateAnalyze.CalculateAnalyze;
+import calculateAssess.CalculateAccess;
 import calculatePf.CalculatePf;
 import riskAssessment.RiskAssessment;
 
@@ -122,6 +126,9 @@ public class ComputeService {
 	
 	@Autowired
 	private TaskOverhaulDao overhaulDao;
+	
+	@Autowired
+	private CohComputeResultDao cohResultDao;
 	
 	public TaskOverhaul getOverhaulTask(Long id) {
 		return overhaulDao.getOne(id);
@@ -808,7 +815,7 @@ public class ComputeService {
 			task.setComputing(2);
 			taskWeakDao.save(task);
 			
-			return ProtObj.success(1);
+			return ProtObj.success(result);
 		} catch(Exception e) {
 			e.printStackTrace();
 			task.setComputing(3);
@@ -826,7 +833,6 @@ public class ComputeService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computeOverhaul(TaskOverhaul task) {
-
 		CTopoComputeResult topoResult = topoResultDao.getOne(task.getTopoId());
 		if(topoResult==null) {
 			return ProtObj.fail(401, "topo compute result empty");
@@ -921,22 +927,28 @@ public class ComputeService {
 					branch_numbers, branch_type, relibilityDataArray, nodes_type, 
 					caseSet, caseOutPut);
 			
-//			MWCellArray t0 = (MWCellArray)objects[0];
-//			MWCellArray t1 = (MWCellArray)objects[1];
-//			
-//			CWeakComputeResult result = new CWeakComputeResult();
-//			result.setProjId(task.getProjId());
-//			result.setTaskId(task.getId());
-//			result.setWeakLoad(ToolKit.cellArrayToString2(t0));
-//			result.setWeakVoltage(ToolKit.cellArrayToString2(t1));
-//			
-//			weakResultDao.deleteByTaskId(task.getId());
-//			weakResultDao.save(result);
-//			
-//			task.setComputing(2);
-//			taskWeakDao.save(task);
+			MWCharArray t0 = (MWCharArray)objects[0];	//单个字符串
+			MWStructArray t1 = (MWStructArray)objects[1];
+			MWCellArray t2 = (MWCellArray)objects[2];
 			
-			return ProtObj.success(1);
+			String bestCase = ToolKit.buildString(t0.getData());
+			String input_Data_a_best = ToolKit.structArrayToString(t1);
+			String caseOutputBest = ToolKit.cellArrayToString2(t2);
+			
+			CohComputeResult result = new CohComputeResult();
+			result.setProjId(task.getProjId());
+			result.setTaskId(task.getId());
+			result.setBestCase(bestCase);
+			result.setInputDataBest(input_Data_a_best);
+			result.setCaseOutputBest(caseOutputBest);
+			
+			cohResultDao.deleteByTaskId(task.getId());
+			cohResultDao.save(result);
+			
+			task.setComputing(2);
+			overhaulDao.save(task);
+			
+			return ProtObj.success(result);
 		} catch(Exception e) {
 			e.printStackTrace();
 			task.setComputing(3);

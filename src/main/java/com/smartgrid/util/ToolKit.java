@@ -1,12 +1,14 @@
 package com.smartgrid.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mathworks.toolbox.javabuilder.MWArray;
 import com.mathworks.toolbox.javabuilder.MWCellArray;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
+import com.mathworks.toolbox.javabuilder.MWStructArray;
 
 public class ToolKit {
 	
@@ -228,6 +230,35 @@ public class ToolKit {
 		return buffer.substring(0, buffer.length() - 1);
 	}
 	
+	public static String structArrayToString(MWStructArray structArray) {
+		Map<String, String> data = buildStringFromStructArray(structArray);
+		return JackSonBeanMapper.toJson(data);
+	}
+	
+	public static Map<String, String> buildStringFromStructArray(MWStructArray data) {
+		Map<String, Integer> fieldsMap = new HashMap<String, Integer>();
+		String[] names = data.fieldNames();
+		for(int i=0; i<names.length; i++) {
+			fieldsMap.put(names[i], i + 1);
+		}
+		
+		Map<String, String> retData = new HashMap<>();
+		
+		for(String k : fieldsMap.keySet()) {
+			Object tmpObj = data.get(fieldsMap.get(k));
+			StringBuilder buf = new StringBuilder();
+			try {
+				double[][] tmpData = (double[][])tmpObj;
+				objectArrayToString(buf, 2, converArrayObject(tmpData), 2);
+			} catch(Exception e) {
+				e.printStackTrace();
+				//这里要想一下如何处理，先跳过
+			}
+			retData.put(k, buf.toString());
+		}
+		return retData;
+	}
+	
 //	public static String intArrayToString(int[][] data) {
 //		if(data==null) return "";
 //		StringBuilder buffer = new StringBuilder();
@@ -258,7 +289,7 @@ public class ToolKit {
 //		return buffer.substring(0, buffer.length() - 1);
 //	}
 	
-	private static String buildString(Object data) {
+	public static String buildString(Object data) {
 		if(data==null || !data.getClass().isArray()) {
 			return null;
 		}
