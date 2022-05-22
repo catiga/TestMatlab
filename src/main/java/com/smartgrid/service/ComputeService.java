@@ -15,11 +15,8 @@ import com.mathworks.toolbox.javabuilder.MWException;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 import com.mathworks.toolbox.javabuilder.MWStructArray;
 import com.smartgrid.dao.C1BranchLevelAreaDao;
-import com.smartgrid.dao.C1BranchLevelDao;
 import com.smartgrid.dao.C1BusLevelAreaDao;
-import com.smartgrid.dao.C1BusLevelDao;
 import com.smartgrid.dao.C1GeneratorLevelAreaDao;
-import com.smartgrid.dao.C1GeneratorLevelDao;
 import com.smartgrid.dao.C1TableNodeLevelProvinceDao;
 import com.smartgrid.dao.CRiskComputeResultDao;
 import com.smartgrid.dao.CTopoComputeResultDao;
@@ -55,7 +52,6 @@ import com.smartgrid.entity.TaskWeak;
 import com.smartgrid.response.ProtObj;
 import com.smartgrid.util.JackSonBeanMapper;
 import com.smartgrid.util.ToolKit;
-import com.sun.media.sound.Toolkit;
 
 import CalculteTopo.CalculateTopo;
 import calculateAnalyze.CalculateAnalyze;
@@ -66,12 +62,12 @@ import riskAssessment.RiskAssessment;
 @Service
 public class ComputeService {
 
-	@Autowired
-	private C1BusLevelDao busLevelDao;
-	@Autowired
-	private C1BranchLevelDao branchLevelDao;
-	@Autowired
-	private C1GeneratorLevelDao generatorLevelDao;
+//	@Autowired
+//	private C1BusLevelDao busLevelDao;
+//	@Autowired
+//	private C1BranchLevelDao branchLevelDao;
+//	@Autowired
+//	private C1GeneratorLevelDao generatorLevelDao;
 //	@Autowired
 //	private C1NameShowLevelDao nameShowLevelDao;
 //	@Autowired
