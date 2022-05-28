@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,7 @@ import com.smartgrid.service.ComputeService;
 import com.smartgrid.service.RepaireTaskService;
 import com.smartgrid.service.SysService;
 
+@CrossOrigin
 @RestController
 public class ComputeController extends WrapperController {
 	
