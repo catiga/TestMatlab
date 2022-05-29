@@ -61,7 +61,9 @@ public class ComputeController extends WrapperController {
 		if(ee==null) {
 			return ProtObj.fail(404, "repaire task not defined");
 		}
-		
+		//变更计算状态
+		ee.setComputing(1);
+		taskService.updateTask(ee);
 		
 		Long projId = ee.getProjId();
 		Object[] retData = null;
@@ -73,9 +75,6 @@ public class ComputeController extends WrapperController {
 		if(retData==null) {
 			return ProtObj.fail(500, "compute failed");
 		}
-		//变更计算状态
-		ee.setComputing(1);
-		taskService.updateTask(ee);
 		
 		//处理入库逻辑
 		try {
