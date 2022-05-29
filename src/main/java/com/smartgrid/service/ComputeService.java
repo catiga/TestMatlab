@@ -688,7 +688,11 @@ public class ComputeService {
 		String nodes_type_str = topoResult.getNodesType();
 		String caseOutPutStr = topoResult.getCaseOutput();
 		
-		String raCase = task.getTitle();	//用户输入的方案title
+//		String raCase = task.getTitle();	//用户输入的方案title
+		
+		List<Map<String, Object>> topoMethodObject = JackSonBeanMapper.jsonToList(task.getTopoMethod());
+		String raCase = ((Map<String, Object>)topoMethodObject.get(0).get("head")).get("name").toString();
+		
 		// mainwire_original_branch 差这三个参数
 		
 		//获取潮流计算的bus_name
