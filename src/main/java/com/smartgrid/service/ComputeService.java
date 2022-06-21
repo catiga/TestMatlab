@@ -321,6 +321,7 @@ public class ComputeService {
 			MWNumericArray t7 = (MWNumericArray)topoData[6];
 			MWNumericArray t8 = (MWNumericArray)topoData[7];
 			MWCellArray t9 = (MWCellArray)topoData[8];
+			MWCellArray t10 = (MWCellArray)topoData[9];
 			
 			int[][] nodes_type = (int[][])t1.toIntArray();
 			double[][][] bus_maintance_sets_3D = (double[][][])t2.toDoubleArray();
@@ -352,6 +353,8 @@ public class ComputeService {
 			
 			String caseOutputStr = ToolKit.cellArrayToString3(caseOutput);
 			
+			String interruptNodesStr = ToolKit.cellArrayToString(t10);
+			
 			CTopoComputeResult result = new CTopoComputeResult();
 			result.setBranchMaintanceSets3d(branch_maintance_sets_3DStr.toString());
 			result.setBranchNumbers(branch_numbersStr.toString());
@@ -364,6 +367,7 @@ public class ComputeService {
 			result.setProjId(task.getProjId());
 			result.setTaskId(task.getId());
 			result.setCaseOutput(caseOutputStr);
+			result.setInterrupNodes(interruptNodesStr);
 			
 			topoResultDao.deleteByTaskId(task.getId());
 			topoResultDao.save(result);
@@ -670,6 +674,7 @@ public class ComputeService {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional(rollbackFor = Exception.class)
 	public ProtObj computeWeak(TaskWeak task) {
 

@@ -50,6 +50,9 @@ public class CTopoComputeResult implements Serializable {
 	
 	@Column(name = "case_output")
 	private String caseOutput;
+	
+	@Column(name = "interrup_nodes_counterbusname")
+	private String interrupNodes;
 
 	public Long getId() {
 		return id;
@@ -145,6 +148,14 @@ public class CTopoComputeResult implements Serializable {
 
 	public void setCaseOutput(String caseOutput) {
 		this.caseOutput = caseOutput;
+	}
+
+	public String getInterrupNodes() {
+		return interrupNodes;
+	}
+
+	public void setInterrupNodes(String interrupNodes) {
+		this.interrupNodes = interrupNodes;
 	}
 	
 }
