@@ -611,7 +611,8 @@ public class ComputeService {
 		int x = methods.size();//caseOutput在matalb里为
 		int y = 2;
 		int z = methods.get(0).size() / 2;
-		MWCellArray caseOutPut = new MWCellArray(new int[] {x, y, z});
+//		MWCellArray caseOutPut = new MWCellArray(new int[] {x, y, z});
+		MWCellArray caseOutPut = new MWCellArray(new int[] {z, y, x});
 		for(int i=0; i<x; i++) {
 			List<String> method = methods.get(i);	// [方案1, 鄂府河220, 鄂府河220, 鄂临空港220, 鄂府河220, 鄂临空港220]
 			for(int j=0; j<z; j++) {      //caseoutput第j行
