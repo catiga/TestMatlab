@@ -310,7 +310,7 @@ public class ComputeService {
 		
 		try {
 			CalculateTopo topoComputer = new CalculateTopo();
-			Object [] topoData = topoComputer.CalculteTopo(9, tableNodeArray, busLevelArray, generatorLevelArray,branchLevelArray, miantance_Target, exMatchIn, mainwire_original_branch, Table_mainwire_maintance_elements);
+			Object [] topoData = topoComputer.CalculteTopo(10, tableNodeArray, busLevelArray, generatorLevelArray,branchLevelArray, miantance_Target, exMatchIn, mainwire_original_branch, Table_mainwire_maintance_elements);
 			
 			MWNumericArray t1 = (MWNumericArray)topoData[0];
 			MWNumericArray t2 = (MWNumericArray)topoData[1];
