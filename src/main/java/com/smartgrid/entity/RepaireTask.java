@@ -38,6 +38,9 @@ public class RepaireTask implements Serializable {
 	
 	@Column(name = "flag")
 	private Integer flag;
+	
+	@Column(name = "in_station")
+	private Integer inStation;
 
 	public Long getId() {
 		return id;
@@ -101,6 +104,14 @@ public class RepaireTask implements Serializable {
 
 	public void setComputing(Integer computing) {
 		this.computing = computing;
+	}
+
+	public Integer getInStation() {
+		return inStation;
+	}
+
+	public void setInStation(Integer inStation) {
+		this.inStation = inStation;
 	}
 	
 }

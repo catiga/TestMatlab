@@ -566,6 +566,12 @@ public class ComputeService {
 		if(topoResult==null) {
 			return ProtObj.fail(401, "topo compute result empty");
 		}
+		
+		List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());//add-LC
+		if(taskData==null || taskData.isEmpty()) {
+			return ProtObj.fail(403, "Task Data empty");//add-LC
+		}
+		
 		//开始组织数据
 		String bus_maintance_sets_3d_str = topoResult.getBusMaintanceSets3d();
 		String branch_maintance_sets_3d_str = topoResult.getBranchMaintanceSets3d();
@@ -576,6 +582,9 @@ public class ComputeService {
 		String caseOutPutStr = topoResult.getCaseOutput();
 		String caseNameStr = task.getTopoMethod();	//这里要取json里面的head的name
 		String branch_numbers_str = topoResult.getBranchNumbers();
+		
+		//检修节点新定义字段
+		Double flagMJ = taskData.get(0).getInStation().doubleValue();
 		
 		//输入数据
 		double[][][] bus_maintance_sets_3d = ToolKit.convert3ArrayFromString(bus_maintance_sets_3d_str);
@@ -642,7 +651,7 @@ public class ComputeService {
 		
 		try {
 			RiskAssessment calRiskAssess = new RiskAssessment();
-			Object[] objects = calRiskAssess.riskAssessment(6, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, caseName);
+			Object[] objects = calRiskAssess.riskAssessment(6, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, caseName, flagMJ);
 			MWNumericArray t0 = (MWNumericArray)objects[0];
 			MWNumericArray t1 = (MWNumericArray)objects[1];
 			MWNumericArray t2 = (MWNumericArray)objects[2];
@@ -683,6 +692,7 @@ public class ComputeService {
 		if(topoResult==null) {
 			return ProtObj.fail(401, "topo compute result empty");
 		}
+		
 		//开始组织数据
 		String bus_maintance_sets_3d_str = topoResult.getBusMaintanceSets3d();
 		String branch_maintance_sets_3d_str = topoResult.getBranchMaintanceSets3d();
@@ -722,6 +732,8 @@ public class ComputeService {
 		
 		List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());
 		String[] maintance_Target = new String[] {taskData.get(0).getStationName()};
+		
+		Double flagMJ = taskData.get(0).getInStation().doubleValue();
 		
 		List<C1BusLevelArea> busLevelAreaData = busLevelAreaDao.findByProjId(task.getProjId());
 		double[][] bus_level_area = new double[busLevelAreaData.size()][13];
@@ -805,7 +817,7 @@ public class ComputeService {
 		try {
 			CalculateAnalyze calAnalyze = new CalculateAnalyze();
 			
-			Object[] objects = calAnalyze.calculateAnalyze(2, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, raCase, bus_name, mainwire_original_branch, maintance_Target, bus_level_area);
+			Object[] objects = calAnalyze.calculateAnalyze(2, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, branch_numbers, branch_type, relibilityDataArray, nodes_type, caseOutPut, raCase, bus_name, mainwire_original_branch, maintance_Target, bus_level_area, flagMJ);
 			MWCellArray t0 = (MWCellArray)objects[0];
 			MWCellArray t1 = (MWCellArray)objects[1];
 			
@@ -843,6 +855,12 @@ public class ComputeService {
 		if(topoResult==null) {
 			return ProtObj.fail(401, "topo compute result empty");
 		}
+		
+		List<RepaireTask> taskData = taskDao.findByProjId(task.getProjId());
+		if(taskData==null || taskData.isEmpty()) {
+			return ProtObj.fail(403, "Task Data empty");//add-LC
+		}
+		
 		//开始组织数据
 		String bus_maintance_sets_3d_str = topoResult.getBusMaintanceSets3d();
 		String branch_maintance_sets_3d_str = topoResult.getBranchMaintanceSets3d();
@@ -853,6 +871,8 @@ public class ComputeService {
 		List<ComponentReliability> relibilityData = componentReliabilityDao.findByProjId(task.getProjId());
 		String nodes_type_str = topoResult.getNodesType();
 		String caseOutPutStr = topoResult.getCaseOutput();
+		
+		Double flagMJ = taskData.get(0).getInStation().doubleValue();
 		
 		//maintance_branch_original
 		List<ComponentBranch> projectComponentBranchData = component_branchDao.findByProjId(task.getProjId());//add-LC
@@ -931,7 +951,7 @@ public class ComputeService {
 			
 			Object[] objects = calAccess.calculateAssess(3, bus_maintance_sets_3d, branch_maintance_sets_3d, gen_maintance_sets_3d, 
 					branch_numbers, branch_type, relibilityDataArray, nodes_type, 
-					caseSet, caseOutPut);
+					caseSet, caseOutPut, flagMJ);
 			
 			MWCharArray t0 = (MWCharArray)objects[0];	//单个字符串
 			MWStructArray t1 = (MWStructArray)objects[1];
