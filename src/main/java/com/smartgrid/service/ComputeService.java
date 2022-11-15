@@ -897,10 +897,27 @@ public class ComputeService {
 		String head = head_with_item.split(";")[0];		// 方案名称列表
 		String item = head_with_item.split(";")[1];		// 悬空节点列表
 		
+		String selectedTopoMethod = task.getTopoMethod();
+		List<Map<String, Object>> selTopMethods = JackSonBeanMapper.jsonToList(selectedTopoMethod);
+		
 		List<List<String>> methods = new ArrayList<>();
 		String[] arrHead = head.split(",");
 		String[] arrItem = item.split(",");
+		List<String> computeHeads = new ArrayList<>();
 		for(int i=0; i<arrHead.length; i++) {
+			boolean add = false;
+			List<Map<String, Object>> x = (List<Map<String, Object>>)selTopMethods.get(0).get("head");
+			
+			for(Map<String, Object> s : x) {
+				if(arrHead[i].equals(s.get("name"))) {
+					add = true;
+					break;
+				}
+			}
+			if(!add) {
+				continue;
+			}
+			computeHeads.add(arrHead[i]);
 			List<String> method_item = new ArrayList<>();	//格式：方案名称，悬空节点名称，方案明细一，方案明细二。。。。。。方案明细N
 			method_item.add(arrHead[i]);
 			method_item.add(arrItem[i]);
@@ -914,10 +931,10 @@ public class ComputeService {
 			methods.add(method_item);
 		}
 		
-		MWCellArray caseSet = new MWCellArray(new int[] {arrHead.length, 1});
-		for(int i=0 ;i<arrHead.length; i++) {
+		MWCellArray caseSet = new MWCellArray(new int[] {computeHeads.size(), 1});
+		for(int i=0 ;i<computeHeads.size(); i++) {
 			int[] idx = new int[] {i+1, 1};
-			caseSet.set(idx, arrHead[i]);
+			caseSet.set(idx, computeHeads.get(i));
 		}
 		
 		//caseOutput在matalb里为z*x*y
